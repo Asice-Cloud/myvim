@@ -1,3 +1,6 @@
+# Based on AstroNvim
+
+if you haven't install AstroNvim, do these first:
 # AstroNvim Template
 
 **NOTE:** This is for AstroNvim v4+
