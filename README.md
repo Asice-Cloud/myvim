@@ -1,7 +1,30 @@
 # Based on AstroNvim
 
-if you haven't install AstroNvim, do these first:
-# AstroNvim Template
+If you haven't install AstroNvim, do [these](#dodo) first.
+
+
+
+My key mappings are:
+
+<F1> : show help command
+
+<F4>:  use cmake-tool build and run current file, CMakeLists.txt or run.sh required
+
+<F5>: debug by dap
+
+<F6>: dial your project in most of languages, but should include a file named 'main.xxx'(xxx is your language)
+
+<F7>: open a split screen terminal
+
+<F8>: build a project by cmake
+
+<F9>: add a broken point for debug on hand
+
+<F10>: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set b&r cpp by c++23
+
+
+
+# <span id="dodo">AstroNvim Template</span>
 
 **NOTE:** This is for AstroNvim v4+
 
