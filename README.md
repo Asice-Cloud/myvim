@@ -1,6 +1,6 @@
 # Based on AstroNvim
 
-If you haven't install AstroNvim, do [these](#dodo) first.
+If you haven't installed AstroNvim, do [these](#dodo) first.
 
 
 
@@ -10,17 +10,17 @@ F1 : show help command
 
 F4:  use cmake-tool build and run current file, CMakeLists.txt or run.sh required
 
-F5: debug by dap
+F5:  debug by dap
 
-F6: dial your project in most of languages, but should include a file named 'main.xxx'(xxx is your language)
+F6:  dial your project in most of languages, but should include a file named 'main.xxx'(xxx is your language)
 
-F7: open a split screen terminal
+F7:  open a split screen terminal
 
-F8: build a project by cmake
-
-F9: add a broken point for debug on hand
+F9:  add a broken point for debug on hand
 
 F10: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set b&r cpp by c++23
+
+Press `space` then you will get some hint for key combinations
 
 
 

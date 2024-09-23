@@ -36,25 +36,6 @@ require "mapping"
 require("notify").setup {
   background_colour = "#000000",
 }
--- 定义一个函数来执行 CMake 构建流程
--- 定义一个函数来执行 CMake 构建流程
-local function build_project()
-  -- 创建 build 目录
-  vim.cmd "!mkdir -p build"
-  -- 切换到 build 目录
-  vim.cmd "cd build"
-  -- 运行 cmake
-  vim.cmd "!cmake .."
-  -- 运行 make
-  vim.cmd "!make"
-  vim.cmd "cd .."
-end
-
--- 创建一个用户命令
-vim.api.nvim_create_user_command("BuildProject", build_project, {})
-
--- 将 F8 键映射到用户命令
-vim.api.nvim_set_keymap("n", "<F8>", ":BuildProject<CR>", { noremap = true, silent = true })
 
 -- F10 compile file
 
@@ -85,7 +66,7 @@ function CompileAndRunFile()
   elseif filetype == "lua" then
     run_cmd = string.format("lua %s", filepath)
   elseif filetype == "go" then
-    run_cmd = string.format("go run %s", filepath)
+      run_cmd = string.format("go run %s", filepath)
   elseif filetype == "javascript" then
     run_cmd = string.format("node %s", filepath)
   elseif filetype == "java" then
