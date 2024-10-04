@@ -60,8 +60,11 @@ function CompileAndRunFile()
   if filetype == "cpp" then
     compile_cmd = string.format("g++ -std=c++23 -o %s %s -O2", output_file, filepath)
     run_cmd = string.format("./%s", output_file)
+  elseif filetype == "cuda" then
+    compile_cmd = string.format("nvcc -ccbin g++-11 -o %s %s -O2", output_file, filepath)
+    run_cmd = string.format("./%s", output_file)
   elseif filetype == "c" then
-    compile_cmd = string.format("gcc -std=c2x -o %s %s", output_file, filepath)
+    compile_cmd = string.format("gcc -std=c2x -o %s %s -O2", output_file, filepath)
     run_cmd = string.format("./%s", output_file)
   elseif filetype == "lua" then
     run_cmd = string.format("lua %s", filepath)
