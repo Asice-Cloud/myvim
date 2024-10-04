@@ -16,9 +16,9 @@ F6:  dial your project in most of languages, but should include a file named 'ma
 
 F7:  open a split screen terminal
 
-F9:  add a broken point for debug on hand
+F8: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set b&r cpp by c++23
 
-F10: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set b&r cpp by c++23
+F9:  add a broken point for debug on hand
 
 Press `space` then you will get some hint for key combinations
 

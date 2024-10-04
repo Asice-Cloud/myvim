@@ -66,7 +66,7 @@ function CompileAndRunFile()
   elseif filetype == "lua" then
     run_cmd = string.format("lua %s", filepath)
   elseif filetype == "go" then
-      run_cmd = string.format("go run %s", filepath)
+    run_cmd = string.format("go run %s", filepath)
   elseif filetype == "javascript" then
     run_cmd = string.format("node %s", filepath)
   elseif filetype == "java" then
@@ -79,6 +79,8 @@ function CompileAndRunFile()
     return vim.cmd "w"
   end
 
+  --vim.api.nvim_set_hl(0, "StatusLine", { bg = "gray", fg = "white" })
+  --vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "gray", fg = "gray" })
   -- 创建浮动终端窗口的函数
   function open_floating_terminal(cmd)
     local buf = vim.api.nvim_create_buf(false, true) -- 创建一个新的空缓冲区
@@ -109,13 +111,21 @@ function CompileAndRunFile()
   end
 
   -- 执行编译命令（如果存在）
-  if compile_cmd ~= "" then open_floating_terminal(compile_cmd) end
+  if compile_cmd ~= "" then
+    local compile_result = vim.fn.system(compile_cmd)
+    if vim.v.shell_error ~= 0 then
+      vim.notify("Compilation failed" .. compile_result, vim.log.levels.ERROR)
+      return
+    else
+      vim.notify("Compilation successful", vim.log.levels.INFO)
+    end
+  end
 
   -- 运行生成的可执行文件或脚本
   open_floating_terminal(run_cmd)
 end
 
-vim.api.nvim_set_keymap("n", "<F10>", ":lua CompileAndRunFile()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<F8>", ":lua CompileAndRunFile()<CR>", { noremap = true, silent = true })
 
 --debug configuration
 -- debug for c cpp rust
