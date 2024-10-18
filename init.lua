@@ -8,7 +8,7 @@ if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then
 end
 vim.opt.rtp:prepend(lazypath)
 -- 设置字体
-vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h15"
+vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h12"
 
 vim.g.neovide_remember_window_size = true
 local VimExtConfig = [[ highlight Normal guibg=NONE ctermbg=None ]]
@@ -28,6 +28,14 @@ end
 vim.g.airline_extensions_tabline_formatter = "defualt"
 vim.g.airline_section_y = 'BN: %{bufnr("%")}'
 vim.g.airline_theme = "tomorrow"
+
+vim.g.clang_format_style_options = {
+  AccessModifierOffset = -4,
+  AllowShortIfStatementsOnASingleLine = "true",
+  AlwaysBreakTemplateDeclarations = "true",
+  Standard = "C++23",
+  BreakBeforeBraces = "Stroustrup"
+}
 
 require "lazy_setup"
 require "polish"
@@ -129,6 +137,8 @@ function CompileAndRunFile()
 end
 
 vim.api.nvim_set_keymap("n", "<F8>", ":lua CompileAndRunFile()<CR>", { noremap = true, silent = true })
+
+
 
 --debug configuration
 -- debug for c cpp rust

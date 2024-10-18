@@ -21,17 +21,17 @@ return {
     opts = function(_, opts)
       -- customize the dashboard header
       opts.section.header.val = {
-        " █████  ███████ ████████ ██████   ██████",
-        "██   ██ ██         ██    ██   ██ ██    ██",
-        "███████ ███████    ██    ██████  ██    ██",
-        "██   ██      ██    ██    ██   ██ ██    ██",
-        "██   ██ ███████    ██    ██   ██  ██████",
+        "     █████  ███████  ██    ██████  ███████",
+        "    ██   ██ ██       ██  ██        ██     ",
+        "    ███████ ███████  ██  ██        ███████",
+        "    ██   ██      ██  ██  ██        ██     ",
+        "    ██   ██ ███████  ██    ██████  ███████",
         " ",
-        "    ███    ██ ██    ██ ██ ███    ███",
-        "    ████   ██ ██    ██ ██ ████  ████",
-        "    ██ ██  ██ ██    ██ ██ ██ ████ ██",
-        "    ██  ██ ██  ██  ██  ██ ██  ██  ██",
-        "    ██   ████   ████   ██ ██      ██",
+        "  ██████  ██       █████    ██    ██        ██",
+        "██        ██     ██     ██  ██    ██        ██",
+        "██        ██     ██     ██  ██    ██   ███████",
+        "██        ██     ██     ██  ██    ██   ██   ██",
+        "  ██████  ██████   █████     ██████    ███████",
       }
       return opts
     end,
@@ -466,6 +466,18 @@ return {
       -- ]]
     end,
   },
+  -- {
+  --   "clang-format",
+  --   config=function()
+  --     vim.g.clang_format_style_options = {
+  --     AccessModifierOffset = -4,
+  --     AllowShortIfStatementsOnASingleLine = "true",
+  --     AlwaysBreakTemplateDeclarations = "true",
+  --     Standard = "C++23",
+  --     BreakBeforeBraces = "Stroustrup"
+  --     }
+  --   end,
+  -- },
   {
     "Exafunction/codeium.vim",
     event = "BufEnter",
