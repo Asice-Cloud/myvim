@@ -34,7 +34,7 @@ vim.g.clang_format_style_options = {
   AllowShortIfStatementsOnASingleLine = "true",
   AlwaysBreakTemplateDeclarations = "true",
   Standard = "C++23",
-  BreakBeforeBraces = "Stroustrup"
+  BreakBeforeBraces = "Stroustrup",
 }
 
 require "lazy_setup"
@@ -137,8 +137,6 @@ function CompileAndRunFile()
 end
 
 vim.api.nvim_set_keymap("n", "<F8>", ":lua CompileAndRunFile()<CR>", { noremap = true, silent = true })
-
-
 
 --debug configuration
 -- debug for c cpp rust

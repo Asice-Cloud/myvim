@@ -484,9 +484,16 @@ return {
   },
   {
     "ellisonleao/gruvbox.nvim",
+    -- config = function()
+    --   require("gruvbox").setup()
+    --   vim.cmd "colorscheme gruvbox"
+    -- end,
+  },
+  {
+    "olimorris/onedarkpro.nvim",
     config = function()
-      require("gruvbox").setup()
-      vim.cmd "colorscheme gruvbox"
+      require("onedarkpro").setup()
+      vim.cmd "colorscheme onedark"
     end,
   },
   {
