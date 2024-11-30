@@ -484,16 +484,9 @@ return {
   },
   {
     "ellisonleao/gruvbox.nvim",
-    -- config = function()
-    --   require("gruvbox").setup()
-    --   vim.cmd "colorscheme gruvbox"
-    -- end,
-  },
-  {
-    "olimorris/onedarkpro.nvim",
     config = function()
-      require("onedarkpro").setup()
-      vim.cmd "colorscheme onedark"
+      require("gruvbox").setup()
+      vim.cmd "colorscheme gruvbox"
     end,
   },
   {
@@ -502,7 +495,6 @@ return {
   {
     "vim-airline/vim-airline-themes",
   },
-
   {
     "tpope/vim-fugitive",
   },
