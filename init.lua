@@ -14,6 +14,10 @@ vim.g.neovide_remember_window_size = true
 local VimExtConfig = [[ highlight Normal guibg=NONE ctermbg=None ]]
 vim.cmd(VimExtConfig)
 vim.g.neovide_transparency = 0.65
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
 
 -- validate that lazy is available
 if not pcall(require, "lazy") then

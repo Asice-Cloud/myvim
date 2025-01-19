@@ -3,6 +3,12 @@
 
 ---@type LazySpec
 return {
+  plugins = {
+    init = {
+      ["Darazaki/indent-o-matic"] = { disable = true },
+      ["lukas-reineke/indent-blankline.nvim"] = { disable = true },
+    },
+  },
 
   -- == Examples of Adding Plugins ==
 
@@ -483,11 +489,18 @@ return {
     event = "BufEnter",
   },
   {
-    "ellisonleao/gruvbox.nvim",
+    "glepnir/zephyr-nvim",
     config = function()
-      require("gruvbox").setup()
-      vim.cmd "colorscheme gruvbox"
+      require "zephyr"
+      vim.cmd "colorscheme zephyr"
     end,
+  },
+  {
+    "ellisonleao/gruvbox.nvim",
+    -- config = function()
+    --   require("gruvbox").setup()
+    --   vim.cmd "colorscheme gruvbox"
+    -- end,
   },
   {
     "vim-airline/vim-airline",
