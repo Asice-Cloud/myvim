@@ -490,17 +490,17 @@ return {
   },
   {
     "glepnir/zephyr-nvim",
-    config = function()
-      require "zephyr"
-      vim.cmd "colorscheme zephyr"
-    end,
+    -- config = function()
+    --   require "zephyr"
+    --   vim.cmd "colorscheme zephyr"
+    -- end,
   },
   {
     "ellisonleao/gruvbox.nvim",
-    -- config = function()
-    --   require("gruvbox").setup()
-    --   vim.cmd "colorscheme gruvbox"
-    -- end,
+    config = function()
+      require("gruvbox").setup()
+      vim.cmd "colorscheme gruvbox"
+    end,
   },
   {
     "vim-airline/vim-airline",
