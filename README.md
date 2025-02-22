@@ -15,6 +15,7 @@ F5:  debug by dap
 F6:  dial your project in most of languages, but should include a file named 'main.xxx'(xxx is your language)
 
 F7:  open a split screen terminal
+$ <S-n> $: open terminal in new window
 
 F8: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set b&r cpp by c++23
 
