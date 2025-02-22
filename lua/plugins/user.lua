@@ -487,7 +487,23 @@ return {
   {
     "Exafunction/codeium.vim",
     event = "BufEnter",
+    config = function()
+      require("codeium").setup {
+        virtual_text = {
+          key_bindings = {
+            accept = "<C-l>",
+            next = "<C-n>",
+            prev = "<C-p>",
+            dismiss = "<C-h>",
+          },
+        },
+      }
+    end,
   },
+  -- {
+  --   "ranjithshegde/ccls.nvim",
+  --   config = function() require("ccls").setup { lsp = { use_defaults = true } } end,
+  -- },
   {
     "glepnir/zephyr-nvim",
     -- config = function()
