@@ -232,6 +232,10 @@ require("dap").adapters["pwa-node"] = {
 }
 
 -- clangd config
+-- require("lspconfig").clangd.setup {
+--   cmd = { "clangd", "--std=c23" },
+-- }
+
 local util = require "lspconfig.util"
 
 -- https://clangd.llvm.org/extensions.html#switch-between-sourceheader

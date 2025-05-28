@@ -11,6 +11,20 @@ require("lazy").setup({
       update_notifications = true, -- Enable/disable notification about running `:Lazy update` twice to update pinned plugins
     },
   },
+  {
+    "Exafunction/codeium.vim",
+    event = "BufEnter",
+    -- opts = {
+    --   virtual_text = {
+    --     key_bindings = {
+    --       accept = "<C-l>",
+    --       next = "<C-n>",
+    --       prev = "<C-p>",
+    --       dismiss = "<C-h>",
+    --     },
+    --   },
+    -- },
+  },
   { import = "community" },
   { import = "plugins" },
 } --[[@as LazySpec]], {
