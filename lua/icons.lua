@@ -34,7 +34,7 @@ local icons = {
     Statement = "",
     Recovery = " ",
     TranslationUnit = " ",
-    PackExpansion = " ",
+    PackExpansion = " "
   },
   type = {
     Array = " ",
@@ -42,7 +42,7 @@ local icons = {
     String = " ",
     Boolean = " ",
     Object = " ",
-    Template = " ",
+    Template = " "
   },
   documents = {
     File = "",
@@ -53,7 +53,7 @@ local icons = {
     EmptyOpenFolder = "",
     Unknown = "",
     Symlink = "",
-    FolderSymlink = "",
+    FolderSymlink = ""
   },
   git = {
     Add = " ",
@@ -64,7 +64,7 @@ local icons = {
     Diff = " ",
     Repo = " ",
     Branch = " ",
-    Unmerged = " ",
+    Unmerged = " "
   },
   ui = {
     Lock = "",
@@ -103,27 +103,27 @@ local icons = {
     Run = "",
     VirtualPrefix = "",
     Next = "",
-    Previous = "",
+    Previous = ""
   },
   diagnostics = {
     Error = " ",
     Warning = " ",
     Information = " ",
     Question = " ",
-    Hint = " ",
+    Hint = " "
   },
   misc = {
     Robot = "󰚩 ",
     Squirrel = "  ",
     Tag = " ",
-    Arch = "󰣇 ",
+    Arch = "󰣇 "
   },
   cmake = {
     CMake = "",
     Build = "",
     Run = "",
-    Debug = "",
-  },
+    Debug = ""
+  }
 }
 
 -- Commented out the NERD_FONTS check to always show icons
