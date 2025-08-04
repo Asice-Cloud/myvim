@@ -406,3 +406,15 @@ vim.defer_fn(
   end,
   100
 )
+
+vim.g.airline_extensions_tabline_formatter = "default"
+vim.g.airline_section_y = 'BN: %{bufnr("%")}'
+vim.g.airline_theme = "monokai"
+
+vim.g.clang_format_style_options = {
+  AccessModifierOffset = -4,
+  AllowShortIfStatementsOnASingleLine = "true",
+  AlwaysBreakTemplateDeclarations = "true",
+  Standard = "C++23",
+  BreakBeforeBraces = "Stroustrup"
+}

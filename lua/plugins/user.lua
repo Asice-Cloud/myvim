@@ -231,6 +231,20 @@ return {
       vim.g.sonokai_disable_italic_comment = 0
       vim.g.sonokai_transparent_background = 1 -- 启用透明背景
       vim.cmd "colorscheme sonokai"
+
+      -- 设置对应的 airline 主题
+      vim.defer_fn(
+        function()
+          if vim.fn.exists(":AirlineTheme") > 0 then
+            pcall(
+              function()
+                vim.cmd("AirlineTheme sonokai")
+              end
+            )
+          end
+        end,
+        100
+      )
     end
   },
   {
@@ -241,10 +255,25 @@ return {
     -- end
   },
   {
-    "vim-airline/vim-airline"
+    "vim-airline/vim-airline",
+    config = function()
+      -- 确保 airline 配置在插件加载后设置
+      vim.g.airline_powerline_fonts = 1 -- 如果你有 powerline 字体
+      vim.g["airline#extensions#tabline#enabled"] = 1
+      vim.g["airline#extensions#tabline#buffer_nr_show"] = 1
+    end
   },
   {
-    "vim-airline/vim-airline-themes"
+    "vim-airline/vim-airline-themes",
+    config = function()
+      -- 在主题插件加载后设置主题
+      vim.defer_fn(function()
+        vim.g.airline_theme = "atomic"
+        if vim.fn.exists(':AirlineRefresh') > 0 then
+          vim.cmd("AirlineRefresh")
+        end
+      end, 100)
+    end
   },
   {
     "tpope/vim-fugitive"

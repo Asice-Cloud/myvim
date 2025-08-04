@@ -35,18 +35,6 @@ if not pcall(require, "lazy") then
   vim.cmd.quit()
 end
 
-vim.g.airline_extensions_tabline_formatter = "defualt"
-vim.g.airline_section_y = 'BN: %{bufnr("%")}'
-vim.g.airline_theme = "base16_monokai"
-
-vim.g.clang_format_style_options = {
-  AccessModifierOffset = -4,
-  AllowShortIfStatementsOnASingleLine = "true",
-  AlwaysBreakTemplateDeclarations = "true",
-  Standard = "C++23",
-  BreakBeforeBraces = "Stroustrup"
-}
-
 require "lazy_setup"
 require "polish"
 require "mapping"
