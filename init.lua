@@ -16,7 +16,7 @@ if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then
 end
 vim.opt.rtp:prepend(lazypath)
 -- 设置字体
-vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h12"
+vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h17"
 
 vim.g.neovide_remember_window_size = true
 local VimExtConfig = [[ highlight Normal guibg=NONE ctermbg=None ]]
