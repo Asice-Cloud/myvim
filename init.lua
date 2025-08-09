@@ -70,7 +70,7 @@ function CompileAndRunFile()
     compile_cmd = string.format("g++ -std=c++23 -o %s %s -O2", output_file, filepath)
     run_cmd = string.format("./%s", output_file)
   elseif filetype == "cuda" then
-    compile_cmd = string.format("nvcc -ccbin g++-11 -o %s %s -O2", output_file, filepath)
+    compile_cmd = string.format("nvcc -ccbin g++-14 -o %s %s -O2 -Wno-deprecated-gpu-targets ", output_file, filepath)
     run_cmd = string.format("./%s", output_file)
   elseif filetype == "c" then
     compile_cmd = string.format("gcc -std=c2x -o %s %s -O2", output_file, filepath)
@@ -86,6 +86,9 @@ function CompileAndRunFile()
     run_cmd = string.format("java -cp %s %s", output_dir, filename)
   elseif filetype == "python" then
     run_cmd = string.format("python3 %s", filepath)
+  elseif filetype == "rust" then
+    compile_cmd = string.format("cargo build --release --target-dir %s", output_dir)
+    run_cmd = string.format("./%s/release/%s", output_dir, filename)
   else
     vim.notify("Unsupported filetype: " .. filetype, vim.log.levels.ERROR)
     return vim.cmd "w"

@@ -241,6 +241,13 @@ return {
     -- end
   },
   {
+    "github/copilot.vim",
+    config = function()
+      vim.g.copilot_no_tab_map = true
+      vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', {expr = true, silent = true, noremap = true})
+    end
+  },
+  {
     "vim-airline/vim-airline",
     config = function()
       -- 确保 airline 配置在插件加载后设置
