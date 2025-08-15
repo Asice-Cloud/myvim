@@ -9,6 +9,105 @@ return {
       ["lukas-reineke/indent-blankline.nvim"] = {disable = true}
     }
   },
+  -- Neo-tree 配置：显示隐藏文件
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    opts = {
+      filesystem = {
+        filtered_items = {
+          visible = true, -- 显示过滤的项目
+          hide_dotfiles = false, -- 显示以 . 开头的文件
+          hide_gitignored = false, -- 显示被 git 忽略的文件
+          hide_hidden = false, -- 在 Windows 上显示隐藏文件
+        },
+        follow_current_file = {
+          enabled = true, -- 自动跟随当前文件
+          leave_dirs_open = false, -- 关闭其他目录
+        },
+        group_empty_dirs = false, -- 不合并空目录
+        hijack_netrw_behavior = "open_default", -- 劫持 netrw
+        use_libuv_file_watcher = true, -- 使用文件监控
+      },
+      window = {
+        position = "left",
+        width = 30,
+        mapping_options = {
+          noremap = true,
+          nowait = true,
+        }
+      },
+      default_component_configs = {
+        container = {
+          enable_character_fade = true
+        },
+        indent = {
+          indent_size = 2,
+          padding = 1, -- 额外填充
+          -- indent guides
+          with_markers = true,
+          indent_marker = "│",
+          last_indent_marker = "└",
+          highlight = "NeoTreeIndentMarker",
+          -- expander config, needed for nesting files
+          with_expanders = nil, -- 如果 nil 和 file nesting 被启用，将启用 expanders
+          expander_collapsed = "",
+          expander_expanded = "",
+          expander_highlight = "NeoTreeExpander",
+        },
+        icon = {
+          folder_closed = "",
+          folder_open = "",
+          folder_empty = "󰜌",
+          -- 下一行仅在 nvim-web-devicons 不可用时应用
+          default = "*",
+          highlight = "NeoTreeFileIcon"
+        },
+        modified = {
+          symbol = "[+]",
+          highlight = "NeoTreeModified",
+        },
+        name = {
+          trailing_slash = false,
+          use_git_status_colors = true,
+          highlight = "NeoTreeFileName",
+        },
+        git_status = {
+          symbols = {
+            -- 改名状态
+            added     = "", -- 或者 "✚"，但这已经是 git status 中的默认值了
+            modified  = "", -- 或者 "✹"
+            deleted   = "✖",-- 这只能在 git status 中显示
+            renamed   = "󰁕",-- 这只能在 git status 中显示
+            -- git status 类型
+            untracked = "",
+            ignored   = "",
+            unstaged  = "󰄱",
+            staged    = "",
+            conflict  = "",
+          }
+        },
+        file_size = {
+          enabled = true,
+          required_width = 64, -- 最小窗口宽度来显示这个栏
+        },
+        type = {
+          enabled = true,
+          required_width = 122, -- 最小窗口宽度来显示这个栏
+        },
+        last_modified = {
+          enabled = true,
+          required_width = 88, -- 最小窗口宽度来显示这个栏
+        },
+        created = {
+          enabled = true,
+          required_width = 110, -- 最小窗口宽度来显示这个栏
+        },
+        symlink_target = {
+          enabled = false,
+        },
+      },
+    }
+  },
   -- == Examples of Adding Plugins ==
 
   "andweeb/presence.nvim",
@@ -216,13 +315,6 @@ return {
   --   "ranjithshegde/ccls.nvim",
   --   config = function() require("ccls").setup { lsp = { use_defaults = true } } end,
   -- },
-  {
-    "glepnir/zephyr-nvim"
-    -- config = function()
-    --   require "zephyr"
-    --   vim.cmd "colorscheme zephyr"
-    -- end,
-  },
   {
     "sainnhe/sonokai",
     config = function()
