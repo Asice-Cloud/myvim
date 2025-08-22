@@ -40,11 +40,11 @@ require "polish"
 require "mapping"
 
 require("notify").setup {
-  background_colour = "#000000"
+  background_colour = "#000000",
 }
 
 -- 将 Shift+F7 映射到打开新终端窗口的函数
-vim.keymap.set("n", "<S-n>", ":terminal<CR>", {noremap = true, silent = true})
+vim.keymap.set("n", "<S-n>", ":terminal<CR>", { noremap = true, silent = true })
 
 -- F10 compile file
 
@@ -114,7 +114,7 @@ function CompileAndRunFile()
       row = row,
       col = col,
       border = "rounded",
-      noautocmd = true
+      noautocmd = true,
     }
 
     local win = vim.api.nvim_open_win(buf, true, opts)
@@ -140,7 +140,7 @@ function CompileAndRunFile()
   open_floating_terminal(run_cmd)
 end
 
-vim.api.nvim_set_keymap("n", "<F8>", ":lua CompileAndRunFile()<CR>", {noremap = true, silent = true})
+vim.api.nvim_set_keymap("n", "<F8>", ":lua CompileAndRunFile()<CR>", { noremap = true, silent = true })
 
 --debug configuration
 -- debug for c cpp rust
@@ -148,42 +148,36 @@ local dap = require "dap"
 dap.adapters.gdb = {
   type = "executable",
   command = "gdb",
-  args = {"--interpreter=dap", "--eval-command", "set print pretty on"}
+  args = { "--interpreter=dap", "--eval-command", "set print pretty on" },
 }
 dap.configurations.c = {
   {
     name = "Launch",
     type = "gdb",
     request = "launch",
-    program = function()
-      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-    end,
+    program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
     cwd = "${workspaceFolder}",
-    stopAtBeginningOfMainSubprogram = false
+    stopAtBeginningOfMainSubprogram = false,
   },
   {
     name = "Select and attach to process",
     type = "gdb",
     request = "attach",
-    program = function()
-      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-    end,
+    program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
     pid = function()
       local name = vim.fn.input "Executable name (filter): "
-      return require("dap.utils").pick_process {filter = name}
+      return require("dap.utils").pick_process { filter = name }
     end,
-    cwd = "${workspaceFolder}"
+    cwd = "${workspaceFolder}",
   },
   {
     name = "Attach to gdbserver :1234",
     type = "gdb",
     request = "attach",
     target = "localhost:1234",
-    program = function()
-      return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-    end,
-    cwd = "${workspaceFolder}"
-  }
+    program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
+    cwd = "${workspaceFolder}",
+  },
 }
 
 -- debug for golang
@@ -192,10 +186,10 @@ dap.adapters.delve = {
   port = "${port}",
   executable = {
     command = "dlv",
-    args = {"dap", "-l", "127.0.0.1:${port}"}
+    args = { "dap", "-l", "127.0.0.1:${port}" },
     -- add this if on windows, otherwise server won't open successfully
     -- detached = false
-  }
+  },
 }
 
 -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
@@ -204,14 +198,14 @@ dap.configurations.go = {
     type = "delve",
     name = "Debug",
     request = "launch",
-    program = "${file}"
+    program = "${file}",
   },
   {
     type = "delve",
     name = "Debug test", -- configuration for debugging test files
     request = "launch",
     mode = "test",
-    program = "${file}"
+    program = "${file}",
   },
   -- works with go.mod packages and sub packages
   {
@@ -219,8 +213,8 @@ dap.configurations.go = {
     name = "Debug test (go.mod)",
     request = "launch",
     mode = "test",
-    program = "./${relativeFileDirname}"
-  }
+    program = "./${relativeFileDirname}",
+  },
 }
 --debug for js
 require("dap").adapters["pwa-node"] = {
@@ -230,8 +224,8 @@ require("dap").adapters["pwa-node"] = {
   executable = {
     command = "node",
     -- 💀 Make sure to update this path to point to your installation
-    args = {"~/js-debug/src/dapDebugServer.js", "${port}"}
-  }
+    args = { "~/js-debug/src/dapDebugServer.js", "${port}" },
+  },
 }
 
 -- clangd config
@@ -245,23 +239,16 @@ local util = require "lspconfig.util"
 local function switch_source_header(bufnr)
   bufnr = util.validate_bufnr(bufnr)
   local clangd_client = util.get_active_client_by_name(bufnr, "clangd")
-  local params = {uri = vim.uri_from_bufnr(bufnr)}
+  local params = { uri = vim.uri_from_bufnr(bufnr) }
   if clangd_client then
-    clangd_client.request(
-      "textDocument/switchSourceHeader",
-      params,
-      function(err, result)
-        if err then
-          error(tostring(err))
-        end
-        if not result then
-          print "Corresponding file cannot be determined"
-          return
-        end
-        vim.api.nvim_command("edit " .. vim.uri_to_fname(result))
-      end,
-      bufnr
-    )
+    clangd_client.request("textDocument/switchSourceHeader", params, function(err, result)
+      if err then error(tostring(err)) end
+      if not result then
+        print "Corresponding file cannot be determined"
+        return
+      end
+      vim.api.nvim_command("edit " .. vim.uri_to_fname(result))
+    end, bufnr)
   else
     print "method textDocument/switchSourceHeader is not supported by any servers active on the current buffer"
   end
@@ -274,31 +261,22 @@ local function symbol_info()
     return vim.notify("Clangd client not found", vim.log.levels.ERROR)
   end
   local params = vim.lsp.util.make_position_params()
-  clangd_client.request(
-    "textDocument/symbolInfo",
-    params,
-    function(err, res)
-      if err or #res == 0 then
-        -- Clangd always returns an error, there is not reason to parse it
-        return
-      end
-      local container = string.format("container: %s", res[1].containerName) ---@type string
-      local name = string.format("name: %s", res[1].name) ---@type string
-      vim.lsp.util.open_floating_preview(
-        {name, container},
-        "",
-        {
-          height = 2,
-          width = math.max(string.len(name), string.len(container)),
-          focusable = false,
-          focus = false,
-          border = require("lspconfig.ui.windows").default_options.border or "single",
-          title = "Symbol Info"
-        }
-      )
-    end,
-    bufnr
-  )
+  clangd_client.request("textDocument/symbolInfo", params, function(err, res)
+    if err or #res == 0 then
+      -- Clangd always returns an error, there is not reason to parse it
+      return
+    end
+    local container = string.format("container: %s", res[1].containerName) ---@type string
+    local name = string.format("name: %s", res[1].name) ---@type string
+    vim.lsp.util.open_floating_preview({ name, container }, "", {
+      height = 2,
+      width = math.max(string.len(name), string.len(container)),
+      focusable = false,
+      focus = false,
+      border = require("lspconfig.ui.windows").default_options.border or "single",
+      title = "Symbol Info",
+    })
+  end, bufnr)
 end
 
 local root_files = {
@@ -307,41 +285,35 @@ local root_files = {
   ".clang-format",
   "compile_commands.json",
   "compile_flags.txt",
-  "configure.ac" -- AutoTools
+  "configure.ac", -- AutoTools
 }
 
 local default_capabilities = {
   textDocument = {
     completion = {
-      editsNearCursor = true
-    }
+      editsNearCursor = true,
+    },
   },
-  offsetEncoding = {"utf-8", "utf-16"}
+  offsetEncoding = { "utf-8", "utf-16" },
 }
 
 return {
   default_config = {
-    cmd = {"clangd", "--compile_commands-dir=build", "xc++", "--std=c++23"},
-    filetypes = {"c", "cpp", "objc", "objcpp", "cuda", "proto"},
-    root_dir = function(fname)
-      return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
-    end,
+    cmd = { "clangd", "--compile_commands-dir=build", "xc++", "--std=c++23" },
+    filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+    root_dir = function(fname) return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname) end,
     single_file_support = true,
-    capabilities = default_capabilities
+    capabilities = default_capabilities,
   },
   commands = {
     ClangdSwitchSourceHeader = {
-      function()
-        switch_source_header(0)
-      end,
-      description = "Switch between source/header"
+      function() switch_source_header(0) end,
+      description = "Switch between source/header",
     },
     ClangdShowSymbolInfo = {
-      function()
-        symbol_info()
-      end,
-      description = "Show symbol info"
-    }
+      function() symbol_info() end,
+      description = "Show symbol info",
+    },
   },
   docs = {
     description = [[
@@ -368,7 +340,7 @@ https://clangd.llvm.org/installation.html
           '.git'
         )
       ]],
-      capabilities = [[default capabilities, with offsetEncoding utf-8]]
-    }
-  }
+      capabilities = [[default capabilities, with offsetEncoding utf-8]],
+    },
+  },
 }
