@@ -18,9 +18,10 @@ vim.keymap.set({ "v", "n" }, "gso", "<cmd>AerialToggle!<CR>", { desc = "Toggle a
 -- 查找类型定义
 vim.keymap.set({ "v", "n" }, "gy", "<cmd>Telescope lsp_type_definitions<CR>", { desc = "Goto type definition" })
 
--- 查找符号定义
 vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "Goto definition" })
 
+-- Find Words (Telescope live_grep)
+vim.keymap.set("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "Find Words" })
 vim.api.nvim_set_keymap("n", "<C-F6>", "<cmd>CompilerToggleResults<cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", ":", "<cmd>FineCmdline<CR>", { noremap = true })
 if pcall(require, "cmake-tools") then
