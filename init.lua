@@ -35,6 +35,7 @@ if not pcall(require, "lazy") then
   vim.cmd.quit()
 end
 
+
 require "lazy_setup"
 require "polish"
 require "mapping"
@@ -87,8 +88,16 @@ function CompileAndRunFile()
   elseif filetype == "python" then
     run_cmd = string.format("python3 %s", filepath)
   elseif filetype == "rust" then
-    compile_cmd = string.format("cargo build --release --target-dir %s", output_dir)
-    run_cmd = string.format("./%s/release/%s", output_dir, filename)
+    -- 如果当前目录有 Cargo.toml，则用 release 模式
+    local cargo_toml = vim.fn.findfile('Cargo.toml', '.;')
+    if cargo_toml ~= '' then
+      compile_cmd = 'cargo build --release'
+      run_cmd = 'cargo run --release'
+    else
+      -- 单文件 rust
+      compile_cmd = string.format('rustc %s -o %s', filepath, output_file)
+      run_cmd = string.format('./%s', output_file)
+    end
   else
     vim.notify("Unsupported filetype: " .. filetype, vim.log.levels.ERROR)
     return vim.cmd "w"
@@ -116,6 +125,9 @@ function CompileAndRunFile()
       border = "rounded",
       noautocmd = true,
     }
+-- 保证浮动窗口边框和内容透明
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE" })
 
     local win = vim.api.nvim_open_win(buf, true, opts)
 
@@ -141,6 +153,62 @@ function CompileAndRunFile()
 end
 
 vim.api.nvim_set_keymap("n", "<F8>", ":lua CompileAndRunFile()<CR>", { noremap = true, silent = true })
+
+-- F6: 编译并运行（带调试信息，兼容 nvim-dap 断点）
+function CompileAndRunWithDebug()
+  local filepath = vim.fn.expand "%:p"
+  local filename = vim.fn.expand "%:t:r"
+  local filetype = vim.bo.filetype
+  local output_dir = "build/bin"
+  local output_file = string.format("%s/%s", output_dir, filename)
+  vim.fn.mkdir(output_dir, "p")
+  local compile_cmd = ""
+  local run_cmd = ""
+
+  if filetype == "cpp" then
+    compile_cmd = string.format("g++ -g -O0 -o %s %s", output_file, filepath)
+    run_cmd = string.format("%s", output_file)
+  elseif filetype == "c" then
+    compile_cmd = string.format("gcc -g -O0 -o %s %s", output_file, filepath)
+    run_cmd = string.format("%s", output_file)
+  elseif filetype == "rust" then
+    local cargo_toml = vim.fn.findfile('Cargo.toml', '.;')
+    if cargo_toml ~= '' then
+      compile_cmd = ""
+      run_cmd = "cargo build && cargo run"
+    else
+      compile_cmd = string.format('rustc -g %s -o %s', filepath, output_file)
+      run_cmd = string.format('./%s', output_file)
+    end
+  elseif filetype == "go" then
+    compile_cmd = ""
+    run_cmd = string.format("go run %s", filepath)
+  elseif filetype == "java" then
+    compile_cmd = string.format("javac -g -d %s %s", output_dir, filepath)
+    run_cmd = string.format("java -cp %s %s", output_dir, filename)
+  else
+    vim.notify("Unsupported filetype: " .. filetype, vim.log.levels.ERROR)
+    return
+  end
+
+  if compile_cmd ~= "" then
+    local compile_result = vim.fn.system(compile_cmd)
+    if vim.v.shell_error ~= 0 then
+      vim.notify("Compilation failed: " .. compile_result, vim.log.levels.ERROR)
+      return
+    else
+      vim.notify("Compilation successful", vim.log.levels.INFO)
+    end
+  end
+
+  if run_cmd ~= "" then
+    vim.cmd('belowright split | terminal ' .. run_cmd)
+  end
+end
+
+vim.api.nvim_set_keymap("n", "<F6>", ":lua CompileAndRunWithDebug()<CR>", { noremap = true, silent = true })
+
+
 
 --debug configuration
 -- debug for c cpp rust

@@ -471,28 +471,31 @@ local function show_macro_expansion()
               end
             end
 
+            if not macro_info_inserted then macro_info_inserted = false end
             if label and value and not is_excluded then
-              -- 高亮 #define 行
-              -- 如果匹配到标签格式，将标签设为青色
-              local formatted_line = string.format("**%s:** %s", label, value)
+              local formatted_line = string.format("%s: %s", label, value)
               table.insert(formatted_content, formatted_line)
             elseif string.find(line, "#define", 1, true) then
-              table.insert(formatted_content, "**📌 Macro Definition:**")
+              table.insert(formatted_content, "📌 Macro Definition:")
               table.insert(formatted_content, "```cpp")
               table.insert(formatted_content, line)
               table.insert(formatted_content, "```")
-            elseif string.find(line, "macro", 1, true) or string.find(line, "MACRO", 1, true) then
-              table.insert(formatted_content, "**🔧 Macro Info:**")
+            elseif (string.find(line, "macro", 1, true) or string.find(line, "MACRO", 1, true)) and not macro_info_inserted then
+              table.insert(formatted_content, "🔧 Macro Info:")
+              macro_info_inserted = true
+              table.insert(formatted_content, "```c")
+              table.insert(formatted_content, line)
+              table.insert(formatted_content, "```")
+            elseif (string.find(line, "macro", 1, true) or string.find(line, "MACRO", 1, true)) and macro_info_inserted then
               table.insert(formatted_content, "```c")
               table.insert(formatted_content, line)
               table.insert(formatted_content, "```")
             elseif string.find(line, "expand", 1, true) or string.find(line, "EXPAND", 1, true) then
-              table.insert(formatted_content, "**⚡ Expansion:**")
+              table.insert(formatted_content, "⚡ Expansion:")
               table.insert(formatted_content, "```diff")
               table.insert(formatted_content, "+ " .. line)
               table.insert(formatted_content, "```")
             else
-              -- 普通行不添加引用符号，保持原样
               table.insert(formatted_content, line)
             end
           end

@@ -10,19 +10,25 @@ F1 : show help command
 
 F4:  use cmake-tool build and run current file, CMakeLists.txt or run.sh required
 
-F5:  debug by dap
-
-F6:  dial your project in most of languages, but should include a file named 'main.xxx'(xxx is your language)
+F5:  debug by dap\lldb
 
 F7:  open a split screen terminal
 $ <S-n> $: open terminal in new window
 
-F8: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set b&r cpp by c++23
+F8: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set build&run cpp by c++23
 
 F9:  add a broken point for debug on hand
 
-Press `space` then you will get some hint for key combinations
+<C-[> <C-]> shift opened file 
 
+gd: Goto defination
+<C-o>: return to (gd)before place
+
+<C-up/down/left/right>: adjust size of one window
+
+::if cursor hover on one function name or macro for 1s, it will show preview of it
+
+Press `space` then you will get some hint for key combinations
 
 
 # <span id="dodo">AstroNvim Template</span>

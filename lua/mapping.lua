@@ -1,5 +1,7 @@
--- Open compiler
-vim.api.nvim_set_keymap("n", "<F6>", "<cmd>CompilerOpen<cr>", { noremap = true, silent = true })
+
+-- Ctrl+[ 切换到上一个 buffer，Ctrl+] 切换到下一个 buffer
+vim.keymap.set('n', '<C-[>', ':bprevious<CR>', { noremap = true, silent = true, desc = '上一个文件' })
+vim.keymap.set('n', '<C-]>', ':bnext<CR>', { noremap = true, silent = true, desc = '下一个文件' })
 
 -- Redo last selected option
 vim.api.nvim_set_keymap(
@@ -18,6 +20,7 @@ vim.keymap.set({ "v", "n" }, "gso", "<cmd>AerialToggle!<CR>", { desc = "Toggle a
 -- 查找类型定义
 vim.keymap.set({ "v", "n" }, "gy", "<cmd>Telescope lsp_type_definitions<CR>", { desc = "Goto type definition" })
 
+-- gd 查找定义
 vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "Goto definition" })
 
 -- Find Words (Telescope live_grep)
