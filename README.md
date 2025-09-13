@@ -3,7 +3,6 @@
 If you haven't installed AstroNvim, do [these](#dodo) first.
 
 
-
 My key mappings are:
 
 F1 : show help command
@@ -17,9 +16,9 @@ $ <S-n> $: open terminal in new window
 
 F8: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set build&run cpp by c++23
 
-F9:  add a broken point for debug on hand
+F9:  add a broken point for debug on hand (it seems no work)
 
-<C-[> <C-]> shift opened file 
+<C-z> <C-x> shift opened file (buffer)
 
 gd: Goto defination
 <C-o>: return to (gd)before place
