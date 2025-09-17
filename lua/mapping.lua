@@ -1,7 +1,6 @@
-
 -- Ctrl+[ 切换到上一个 buffer，Ctrl+] 切换到下一个 buffer
-vim.keymap.set('n', '<C-z>', ':bprevious<CR>', { noremap = true, silent = true, desc = '上一个文件' })
-vim.keymap.set('n', '<C-x>', ':bnext<CR>', { noremap = true, silent = true, desc = '下一个文件' })
+vim.keymap.set("n", "<C-z>", ":bprevious<CR>", { noremap = true, silent = true, desc = "上一个文件" })
+vim.keymap.set("n", "<C-x>", ":bnext<CR>", { noremap = true, silent = true, desc = "下一个文件" })
 
 -- Redo last selected option
 vim.api.nvim_set_keymap(
@@ -11,6 +10,12 @@ vim.api.nvim_set_keymap(
     .. "<cmd>CompilerRedo<cr>",
   { noremap = true, silent = true }
 )
+
+-- 禁用普通模式下的 q 键录制宏
+vim.keymap.set("n", "q", "<Nop>")
+
+-- 用 F5 代替 q 录制宏
+vim.keymap.set("n", "<F3>", "q", { noremap = true })
 
 -- Toggle compiler results
 -- 开关项目文件树
