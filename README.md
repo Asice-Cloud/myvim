@@ -7,6 +7,8 @@ My key mappings are:
 
 F1 : show help command
 
+F3 : macro record
+
 F4:  use cmake-tool build and run current file, CMakeLists.txt or run.sh required
 
 F5:  debug by dap\lldb
