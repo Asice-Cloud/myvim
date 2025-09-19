@@ -20,7 +20,7 @@ F8: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. 
 
 F9:  add a broken point for debug on hand (it seems no work)
 
-<C-z> <C-x> shift opened file (buffer)
+$<C-z> <C-x>$ shift opened file (buffer)
 
 gd: Goto defination
 <C-o>: return to (gd)before place
