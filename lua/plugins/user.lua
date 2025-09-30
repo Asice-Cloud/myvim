@@ -319,23 +319,23 @@ return {
   -- },
   {
     "sainnhe/sonokai",
-    -- config = function()
-    --  vim.g.sonokai_style = "default" -- or 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
-    --  vim.g.sonokai_enable_italic = 1
-    --  vim.g.sonokai_disable_italic_comment = 0
-    --  vim.g.sonokai_transparent_background = 1 -- 启用透明背景
-    --  vim.cmd "colorscheme sonokai"
-    -- end,
+     config = function()
+      vim.g.sonokai_style = "default" -- or 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
+      vim.g.sonokai_enable_italic = 1
+      vim.g.sonokai_disable_italic_comment = 0
+      vim.g.sonokai_transparent_background = 1 -- 启用透明背景
+      vim.cmd "colorscheme sonokai"
+     end,
   },
   {
     "ellisonleao/gruvbox.nvim",
-     config = function()
-       vim.g.gruvbox_style = "default" -- or 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
-       vim.g.gruvbox_enable_italic = 1
-       vim.g.gruvbox_disable_italic_comment = 0
-       vim.g.gruvbox_transparent_background = 1 -- 启用透明背景
-       vim.cmd "colorscheme gruvbox"
-     end,
+    -- config = function()
+    --   vim.g.gruvbox_style = "default" -- or 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
+    --   vim.g.gruvbox_enable_italic = 1
+    --   vim.g.gruvbox_disable_italic_comment = 0
+    --   vim.g.gruvbox_transparent_background = 1 -- 启用透明背景
+    --   vim.cmd "colorscheme gruvbox"
+    -- end,
   },
   {
     "github/copilot.vim",
