@@ -298,20 +298,33 @@ local lspconfig = require "lspconfig"
 
 lspconfig.clangd.setup {
   cmd = {
-    "clangd",
+    "clangd", -- 确保这行存在
+    "--background-index",
+    "--clang-tidy",
     "--completion-style=detailed",
     "--function-arg-placeholders",
+    "--header-insertion=iwyu",
     "--fallback-style=llvm",
   },
   init_options = {
-    fallbackFlags = { "-std=c++23" },
+    fallbackFlags = {
+      "-std=c++23",
+      -- "-std=c23",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+    },
   },
-  -- 添加缺失的必需字段
-  capabilities = require("cmp_nvim_lsp").default_capabilities(), -- 如果使用 nvim-cmp
-  on_attach = function(client, bufnr)
-    -- 这里可以添加按键映射等
-  end,
-  root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".clangd", ".git"),
+  filetypes = { "cpp", "cxx", "cc", "h", "hpp", "hxx" },
+  root_dir = lspconfig.util.root_pattern(
+    "compile_commands.json",
+    "compile_flags.txt",
+    ".clangd",
+    "CMakeLists.txt",
+    "Makefile",
+    ".git"
+  ),
   single_file_support = true,
 }
 
