@@ -293,9 +293,27 @@ require("dap").adapters["pwa-node"] = {
 }
 
 -- clangd config
--- require("lspconfig").clangd.setup {
---   cmd = { "clangd", "--std=c23" },
--- }
+-- clangd 配置
+local lspconfig = require "lspconfig"
+
+lspconfig.clangd.setup {
+  cmd = {
+    "clangd",
+    "--completion-style=detailed",
+    "--function-arg-placeholders",
+    "--fallback-style=llvm",
+  },
+  init_options = {
+    fallbackFlags = { "-std=c++23" },
+  },
+  -- 添加缺失的必需字段
+  capabilities = require("cmp_nvim_lsp").default_capabilities(), -- 如果使用 nvim-cmp
+  on_attach = function(client, bufnr)
+    -- 这里可以添加按键映射等
+  end,
+  root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".clangd", ".git"),
+  single_file_support = true,
+}
 
 local util = require "lspconfig.util"
 
