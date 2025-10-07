@@ -39,6 +39,38 @@ return {
           nowait = true,
         },
       },
+      -- 添加透明背景设置
+      renderers = {
+        directory = {
+          { "indent" },
+          { "icon" },
+          { "current_filter" },
+          {
+            "container",
+            content = {
+              { "name", zindex = 10 },
+              { "clipboard", zindex = 10 },
+              { "diagnostics", errors_only = true, zindex = 20, align = "right", hide_when_expanded = true },
+              { "git_status", zindex = 20, align = "right", hide_when_expanded = true },
+            },
+          },
+        },
+        file = {
+          { "indent" },
+          { "icon" },
+          {
+            "container",
+            content = {
+              { "name", zindex = 10 },
+              { "clipboard", zindex = 10 },
+              { "bufnr", zindex = 10 },
+              { "modified", zindex = 20, align = "right" },
+              { "diagnostics", zindex = 20, align = "right", hide_when_expanded = true },
+              { "git_status", zindex = 20, align = "right" },
+            },
+          },
+        },
+      },
       default_component_configs = {
         container = {
           enable_character_fade = true,
@@ -318,15 +350,26 @@ return {
   --   config = function() require("ccls").setup { lsp = { use_defaults = true } } end,
   -- },
   {
-    "sainnhe/sonokai",
-     config = function()
-      vim.g.sonokai_style = "default" -- or 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
-      vim.g.sonokai_enable_italic = 1
-      vim.g.sonokai_disable_italic_comment = 0
-      vim.g.sonokai_transparent_background = 1 -- 启用透明背景
-      vim.cmd "colorscheme sonokai"
-     end,
+    "neanias/everforest-nvim",
+    config = function()
+      vim.g.everforest_background = "medium" -- 选项: 'hard', 'medium', 'soft'
+      vim.g.everforest_better_performance = 1 -- 启用更好的性能
+      vim.g.everforest_disable_italic_comment = 0 -- 启用斜体注释
+      vim.g.everforest_transparent_background = 1 -- 启用透明背景
+      vim.cmd "colorscheme everforest"
+    end,
   },
+  {
+    "sainnhe/sonokai",
+    -- config = function()
+    --   vim.g.sonokai_style = "default" -- or 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
+    --   vim.g.sonokai_enable_italic = 1
+    --   vim.g.sonokai_disable_italic_comment = 0
+    --   vim.g.sonokai_transparent_background = 1 -- 启用透明背景
+    --   vim.cmd "colorscheme sonokai"
+    -- end,
+  },
+
   {
     "ellisonleao/gruvbox.nvim",
     -- config = function()

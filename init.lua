@@ -24,6 +24,22 @@ local VimExtConfig = [[ highlight Normal guibg=NONE ctermbg=None ]]
 vim.cmd(VimExtConfig)
 vim.g.neovide_transparency = 0.65
 
+-- 设置Neo-tree透明背景
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    vim.api.nvim_set_hl(0, "NeoTreeNormal", { bg = "NONE" })
+    vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { bg = "NONE" })
+    vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", { bg = "NONE" })
+    vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", { bg = "NONE" })
+  end,
+})
+
+-- 立即应用透明设置
+vim.api.nvim_set_hl(0, "NeoTreeNormal", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "NeoTreeNormalNC", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", { bg = "NONE" })
+
 -- validate that lazy is available
 if not pcall(require, "lazy") then
   -- stylua: ignore
