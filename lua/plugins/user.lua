@@ -3,14 +3,7 @@
 ---@type LazySpec
 return {
   plugins = {
-    init = {
-      ["Darazaki/indent-o-matic"] = {
-        disable = true,
-      },
-      ["lukas-reineke/indent-blankline.nvim"] = {
-        disable = true,
-      },
-    },
+    init = {},
   },
   -- Neo-tree 配置：显示隐藏文件
   {
@@ -76,7 +69,7 @@ return {
           enable_character_fade = true,
         },
         indent = {
-          indent_size = 2,
+          indent_size = 4,
           padding = 1, -- 额外填充
           -- indent guides
           with_markers = true,
@@ -533,6 +526,11 @@ return {
   -- You can disable default plugins as follows:
   {
     "max397574/better-escape.nvim",
+    enabled = false,
+  },
+  -- disable guess-indent to avoid it overwriting our indent settings
+  {
+    "NMAC427/guess-indent.nvim",
     enabled = false,
   },
   -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call

@@ -1204,3 +1204,31 @@ vim.g.clang_format_style_options = {
   Standard = "C++23",
   BreakBeforeBraces = "Stroustrup"
 }
+
+-- Ensure buffers use 4-space indentation. Some plugins (guess-indent, formatters)
+-- or LSP/on-save formatting can change buffer-local settings; enforce after
+-- common events to make vim.opt options take effect per-buffer.
+local function enforce_4_space_indent(bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+  -- Only set for normal file buffers (skip terminals, help, etc.)
+  local buftype = vim.api.nvim_buf_get_option(bufnr, "buftype")
+  if buftype ~= "" then return end
+  vim.bo[bufnr].expandtab = true
+  vim.bo[bufnr].shiftwidth = 4
+  vim.bo[bufnr].tabstop = 4
+  vim.bo[bufnr].softtabstop = 4
+end
+
+vim.api.nvim_create_autocmd({"BufReadPost", "BufNewFile", "FileType"}, {
+  callback = function(args) enforce_4_space_indent(args.buf) end,
+})
+
+-- If an LSP attaches it may influence formatting; set after attach as well.
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args) enforce_4_space_indent(args.buf) end,
+})
+
+-- Some formatters run on save and may alter whitespace; re-apply after write.
+vim.api.nvim_create_autocmd("BufWritePost", {
+  callback = function(args) enforce_4_space_indent(args.buf) end,
+})
