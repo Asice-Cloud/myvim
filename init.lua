@@ -60,8 +60,6 @@ require("notify").setup {
   background_colour = "#000000",
 }
 
--- 将 Shift+F7 映射到打开新终端窗口的函数
-vim.keymap.set("n", "<S-n>", ":terminal<CR>", { noremap = true, silent = true })
 
 -- F10 compile file
 
