@@ -569,4 +569,82 @@ return {
       )
     end,
   },
+  -- Rust development: rust-tools + inlay hints (Neovim 0.10+ builtin or fallback)
+  {
+    "simrat39/rust-tools.nvim",
+    ft = { "rust" },
+    config = function()
+      local ok, rust_tools = pcall(require, "rust-tools")
+      if not ok then return end
+      local lspconfig = require("lspconfig")
+
+      local server_opts = {
+        on_attach = function(client, bufnr)
+          -- Enable inlay hints: prefer built-in (nvim 0.10+), otherwise try lsp-inlayhints.nvim
+          if vim.lsp.inlay_hint then
+            pcall(vim.lsp.inlay_hint, bufnr, true)
+          else
+            local ok2, inlay = pcall(require, "lsp-inlayhints")
+            if ok2 and inlay.on_attach then pcall(inlay.on_attach, client, bufnr) end
+          end
+
+          -- Reduce noisy inline warnings: show virtual_text only for errors, keep signs/underline for warnings
+          -- This is global (Neovim diagnostic API); adjust if you want per-project behavior.
+          pcall(vim.diagnostic.config, {
+            virtual_text = { severity = { min = vim.diagnostic.severity.ERROR } },
+            signs = true,
+            underline = true,
+            update_in_insert = false,
+          })
+
+          -- example keymap for rust-tools
+          local opts = { noremap = true, silent = true }
+          vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rh", "<cmd>RustHoverActions<CR>", opts)
+          vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>rc", "<cmd>RustCodeAction<CR>", opts)
+        end,
+        settings = {
+          ["rust-analyzer"] = {
+            cargo = { allFeatures = true },
+            -- `checkOnSave` can be a boolean in some rust-analyzer versions. Set to true to avoid
+            -- "invalid type: map" errors on older servers. If you want clippy diagnostics,
+            -- run `cargo clippy` manually or configure it via your toolchain/mason-managed RA.
+            checkOnSave = true,
+            -- Disable a few rust-analyzer diagnostics that are commonly noisy; add/remove as needed.
+            diagnostics = {
+              disabled = { "unresolved-proc-macro", "inactive-code" },
+            },
+            inlayHints = {
+              typeHints = true,
+              parameterHints = true,
+              chainingHints = true,
+              closureReturnTypeHints = true,
+              renderColons = true,
+            },
+          },
+        },
+      }
+
+      rust_tools.setup({
+        server = server_opts,
+        tools = {
+          inlay_hints = {
+            auto = true,
+            show_parameter_hints = true,
+            parameter_hints_prefix = "<- ",
+            other_hints_prefix = "=> ",
+          },
+        },
+      })
+    end,
+  },
+  {
+    -- Fallback for Neovim <0.10: community inlay hints plugin
+    "lvimuser/lsp-inlayhints.nvim",
+    event = "LspAttach",
+    config = function()
+      local ok, inlay = pcall(require, "lsp-inlayhints")
+      if not ok then return end
+      inlay.setup()
+    end,
+  },
 }
