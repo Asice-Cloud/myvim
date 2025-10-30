@@ -17,14 +17,17 @@ F7:  open a split screen terminal
 
 F8: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set build&run cpp by c++23
 
-F9:  add a broken point for debug on hand (it seems no work)
+F9:  add a broken point for debug on hand
+`<S-F9>`: conditon break point
 
 `<C-z> <C-x>` shift opened file (buffer)
 
 gd: Goto defination
 `<C-o>`: return to (gd)before place
 
-<C-up/down/left/right>: adjust size of one window
+`<C-up/down/left/right>`: adjust size of one window
+
+`<C-N>`: select a word, come into multi-cursor mode
 
 ::if cursor hover on one function name or macro for 1s, it will show preview of it
 

@@ -174,16 +174,17 @@ function CompileAndRunWithDebug()
     local filename = vim.fn.expand "%:t:r"
     local filetype = vim.bo.filetype
     local output_dir = "build/bin"
-    local output_file = string.format("%s/%s", output_dir, filename)
+    outname = filename .. "_debug"
+    local output_file = string.format("%s/%s", output_dir, outname)
     vim.fn.mkdir(output_dir, "p")
     local compile_cmd = ""
     local run_cmd = ""
 
     if filetype == "cpp" then
-        compile_cmd = string.format("g++ -g -O0 -o %s %s", output_file, filepath)
-        run_cmd = string.format("%s", output_file)
+        compile_cmd = string.format("clang++ -g -O0 -o %s %s", output_file, filepath)
+        run_cmd = string.format("%s",output_file)
     elseif filetype == "c" then
-        compile_cmd = string.format("gcc -g -O0 -o %s %s", output_file, filepath)
+        compile_cmd = string.format("clang -g -O0 -o %s %s", output_file, filepath)
         run_cmd = string.format("%s", output_file)
     elseif filetype == "rust" then
         local cargo_toml = vim.fn.findfile("Cargo.toml", ".;")
@@ -199,7 +200,7 @@ function CompileAndRunWithDebug()
         run_cmd = string.format("go run %s", filepath)
     elseif filetype == "java" then
         compile_cmd = string.format("javac -g -d %s %s", output_dir, filepath)
-        run_cmd = string.format("java -cp %s %s", output_dir, filename)
+        run_cmd = string.format("java -cp %s %s", output_dir,output_file)
     else
         vim.notify("Unsupported filetype: " .. filetype, vim.log.levels.ERROR)
         return
@@ -305,6 +306,61 @@ require("dap").adapters["pwa-node"] = {
         args = { "~/js-debug/src/dapDebugServer.js", "${port}" },
     },
 }
+
+-- debug for lldb / codelldb
+-- Prefer codelldb (vscode-lldb) if installed (mason or manual). Fallback to system lldb-vscode.
+do
+    local has_mason_registry, mr = pcall(require, "mason-registry")
+    local codelldb_path
+    if has_mason_registry and mr.is_installed and mr.is_installed "codelldb" then
+        local pkg = mr.get_package "codelldb"
+        if pkg then codelldb_path = pkg:get_install_path() .. "/extension/adapter/codelldb" end
+    end
+
+    if codelldb_path and vim.loop.fs_stat(codelldb_path) then
+        dap.adapters.codelldb = {
+            type = "server",
+            port = "${port}",
+            executable = {
+                command = codelldb_path,
+                args = { "--port", "${port}" },
+            },
+        }
+        dap.configurations.cpp = dap.configurations.cpp or {}
+        table.insert(dap.configurations.cpp, {
+            name = "Launch codelldb",
+            type = "codelldb",
+            request = "launch",
+            program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
+            cwd = "${workspaceFolder}",
+            stopOnEntry = false,
+        })
+        dap.configurations.c = dap.configurations.cpp
+        dap.configurations.rust = dap.configurations.cpp
+    else
+        -- fallback to lldb-vscode executable if present in PATH
+        local lldb_vscode = vim.fn.exepath "lldb-vscode"
+        if lldb_vscode == "" then lldb_vscode = vim.fn.exepath "lldb" end
+        if lldb_vscode ~= "" then
+            dap.adapters.lldb = {
+                type = "executable",
+                command = lldb_vscode,
+                name = "lldb",
+            }
+            dap.configurations.cpp = dap.configurations.cpp or {}
+            table.insert(dap.configurations.cpp, {
+                name = "Launch with lldb",
+                type = "lldb",
+                request = "launch",
+                program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
+                cwd = "${workspaceFolder}",
+                stopOnEntry = false,
+            })
+            dap.configurations.c = dap.configurations.cpp
+            dap.configurations.rust = dap.configurations.cpp
+        end
+    end
+end
 
 -- clangd config
 -- clangd 配置
