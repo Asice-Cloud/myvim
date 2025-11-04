@@ -655,4 +655,42 @@ return {
             inlay.setup()
         end,
     },
+    {
+        "nvimdev/lspsaga.nvim",
+        event = "LspAttach",
+        dependencies = { "nvim-tree/nvim-web-devicons", "nvim-treesitter/nvim-treesitter" },
+        config = function()
+            local ok, saga = pcall(require, "lspsaga")
+            if not ok then return end
+            saga.setup {
+                ui = {
+                    border = "rounded",
+                    winblend = 0,
+                },
+                preview = {
+                    lines_above = 0,
+                    lines_below = 10,
+                },
+                lightbulb = {
+                    enable = true,
+                    sign = true,
+                    enable_in_insert = false,
+                },
+                symbol_in_winbar = { enable = false },
+                scroll_preview = { scroll_down = "<C-f>", scroll_up = "<C-d>" },
+            }
+
+            -- useful keymaps for lspsaga features
+            local map = vim.keymap.set
+            map("n", "gh", "<cmd>Lspsaga lsp_finder<CR>", { silent = true }) -- find references/definitions
+            map("n", "gr", "<cmd>Lspsaga rename<CR>", { silent = true })
+            map("n", "ga", "<cmd>Lspsaga code_action<CR>", { silent = true })
+            -- map("n", "K", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
+            -- ensure no global K mapping remains from lspsaga (remove if present)
+            pcall(vim.keymap.del, "n", "K")
+            map("n", "<leader>sl", "<cmd>Lspsaga show_line_diagnostics<CR>", { silent = true })
+            map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { silent = true })
+            map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { silent = true })
+        end,
+    },
 }

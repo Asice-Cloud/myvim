@@ -23,13 +23,17 @@ F9:  add a broken point for debug on hand
 `<C-z> <C-x>` shift opened file (buffer)
 
 gd: Goto defination
+ga: get code actions
+gh: lsp_finder
+
+normal, click `<S-l>` (L) , then will show preview of definition or macro expansion
+
 `<C-o>`: return to (gd)before place
 
 `<C-up/down/left/right>`: adjust size of one window
 
 `<C-N>`: select a word, come into multi-cursor mode
 
-::if cursor hover on one function name or macro for 1s, it will show preview of it
 
 Press `space` then you will get some hint for key combinations
 
