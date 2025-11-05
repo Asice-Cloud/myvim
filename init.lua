@@ -17,7 +17,7 @@ if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then
 end
 vim.opt.rtp:prepend(lazypath)
 -- 设置字体
-vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h17"
+vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h19"
 
 vim.g.neovide_remember_window_size = true
 local VimExtConfig = [[ highlight Normal guibg=NONE ctermbg=None ]]
@@ -206,25 +206,25 @@ function CompileAndRunWithDebug()
 
     if filetype == "cpp" then
         compile_cmd = string.format("clang++ -g -O0 -o %s %s", output_file, filepath)
-        run_cmd = string.format("%s",output_file)
+        run_cmd = string.format("gdb %s", output_file)
     elseif filetype == "c" then
         compile_cmd = string.format("clang -g -O0 -o %s %s", output_file, filepath)
-        run_cmd = string.format("%s", output_file)
+        run_cmd = string.format("gdb %s", output_file)
     elseif filetype == "rust" then
         local cargo_toml = vim.fn.findfile("Cargo.toml", ".;")
         if cargo_toml ~= "" then
             compile_cmd = ""
-            run_cmd = "cargo build && cargo run"
+            run_cmd = "cargo build && gdb target/debug/" .. filename
         else
             compile_cmd = string.format("rustc -g %s -o %s", filepath, output_file)
-            run_cmd = string.format("./%s", output_file)
+            run_cmd = string.format("gdb ./%s", output_file)
         end
     elseif filetype == "go" then
         compile_cmd = ""
-        run_cmd = string.format("go run %s", filepath)
+        run_cmd = string.format("gdb %s", filepath)
     elseif filetype == "java" then
         compile_cmd = string.format("javac -g -d %s %s", output_dir, filepath)
-        run_cmd = string.format("java -cp %s %s", output_dir,output_file)
+        run_cmd = string.format("java -cp %s %s", output_dir, output_file)
     else
         vim.notify("Unsupported filetype: " .. filetype, vim.log.levels.ERROR)
         return
@@ -428,13 +428,31 @@ lspconfig.clangd.setup {
     capabilities = clang_capabilities,
     -- on_attach: set common LSP keymaps and enable signature help integration if available
     on_attach = function(client, bufnr)
-    local bufopts = { noremap = true, silent = true, buffer = bufnr }
+        local bufopts = { noremap = true, silent = true, buffer = bufnr }
         -- add descriptive labels so UI/which-key can show them
         -- Note: K mapping removed here so global or plugin mappings (lspsaga or default) handle hover.
         -- If you want a buffer-local hover mapping, re-enable here.
-    pcall(vim.keymap.set, "n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", bufopts, { desc = "LSP: Go to definition" }))
-    pcall(vim.keymap.set, "n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", bufopts, { desc = "LSP: Go to declaration" }))
-    pcall(vim.keymap.set, "i", "<C-k>", vim.lsp.buf.signature_help, vim.tbl_extend("force", bufopts, { desc = "LSP: Signature help" }))
+        pcall(
+            vim.keymap.set,
+            "n",
+            "gd",
+            vim.lsp.buf.definition,
+            vim.tbl_extend("force", bufopts, { desc = "LSP: Go to definition" })
+        )
+        pcall(
+            vim.keymap.set,
+            "n",
+            "gD",
+            vim.lsp.buf.declaration,
+            vim.tbl_extend("force", bufopts, { desc = "LSP: Go to declaration" })
+        )
+        pcall(
+            vim.keymap.set,
+            "i",
+            "<C-k>",
+            vim.lsp.buf.signature_help,
+            vim.tbl_extend("force", bufopts, { desc = "LSP: Signature help" })
+        )
 
         -- If lsp_signature is installed and configured, attach it to this buffer to show parameter hints while typing
         pcall(function()

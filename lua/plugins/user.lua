@@ -352,23 +352,23 @@ return {
     -- },
     {
         "neanias/everforest-nvim",
-        config = function()
-            vim.g.everforest_background = "medium" -- 选项: 'hard', 'medium', 'soft'
-            vim.g.everforest_better_performance = 1 -- 启用更好的性能
-            vim.g.everforest_disable_italic_comment = 0 -- 启用斜体注释
-            vim.g.everforest_transparent_background = 1 -- 启用透明背景
-            vim.cmd "colorscheme everforest"
-        end,
+        -- config = function()
+        --     vim.g.everforest_background = "hard" -- 选项: 'hard', 'medium', 'soft'
+        --     vim.g.everforest_better_performance = 1 -- 启用更好的性能
+        --     vim.g.everforest_disable_italic_comment = 0 -- 启用斜体注释
+        --     vim.g.everforest_transparent_background = 1 -- 启用透明背景
+        --     vim.cmd "colorscheme everforest"
+        -- end,
     },
     {
         "sainnhe/sonokai",
-        -- config = function()
-        --   vim.g.sonokai_style = "default" -- or 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
-        --   vim.g.sonokai_enable_italic = 1
-        --   vim.g.sonokai_disable_italic_comment = 0
-        --   vim.g.sonokai_transparent_background = 1 -- 启用透明背景
-        --   vim.cmd "colorscheme sonokai"
-        -- end,
+        config = function()
+            vim.g.sonokai_style = "default" -- or 'atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
+            vim.g.sonokai_enable_italic = 1
+            vim.g.sonokai_disable_italic_comment = 0
+            vim.g.sonokai_transparent_background = 1 -- 启用透明背景
+            vim.cmd "colorscheme sonokai"
+        end,
     },
 
     {
