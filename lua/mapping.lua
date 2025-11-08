@@ -47,3 +47,7 @@ else
     { noremap = true, silent = true }
   )
 end
+
+-- Disable Shift-H (the 'H' key) in normal mode if user wants it turned off
+-- This prevents accidental jumps to the top of the screen when pressing Shift+H
+vim.keymap.set("n", "H", "<Nop>", { noremap = true, silent = true, desc = "Disable Shift-H" })

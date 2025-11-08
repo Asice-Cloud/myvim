@@ -1,4 +1,36 @@
 vim.keymap.set("n", "<Esc>", "<Esc>", { desc = "Force Esc to remain Esc in normal mode", noremap = true })
+
+-- Early filter for specific deprecation messages so they don't appear during
+-- plugin startup. Placed here before `lazy` is required so messages emitted
+-- during plugin setup can be filtered.
+do
+    local _notify = vim.notify
+    vim.notify = function(msg, level, opts)
+        if type(msg) == "string" then
+            -- Filter messages that mention the deprecated API used by some plugins
+            -- Example: "vim.lsp.get_active_clients() is deprecated. Run ':checkhealth vim.deprecated'..."
+            if msg:match("get_active_clients") or msg:match("checkhealth vim%.deprecated") then
+                return
+            end
+            -- Also ignore short deprecation mentions to avoid noisy startup messages
+            if msg:match("[Dd]eprecat") and (msg:match("vim%.lsp") or msg:match("get_active_clients")) then
+                return
+            end
+        end
+        return _notify(msg, level, opts)
+    end
+end
+
+    -- Provide a temporary compatibility shim: if running on Neovim with
+    -- `vim.lsp.get_clients`, map the deprecated `get_active_clients` to it so
+    -- plugins calling the old API won't trigger deprecation messages.
+    if vim.lsp and type(vim.lsp.get_clients) == "function" then
+        vim.lsp.get_active_clients = function(filters)
+            -- `vim.lsp.get_clients` accepts a table of filters in newer Neovim
+            return vim.lsp.get_clients(filters)
+        end
+    end
+
 -- This file simply bootstraps the installation of Lazy.nvim and then calls other files for execution
 -- This file doesn't necessarily need to be touched, BE CAUTIOUS editing this file and proceed at your own risk.
 local lazypath = vim.env.LAZY or vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
@@ -17,7 +49,7 @@ if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then
 end
 vim.opt.rtp:prepend(lazypath)
 -- 设置字体
-vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h19"
+vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h17"
 
 vim.g.neovide_remember_window_size = true
 local VimExtConfig = [[ highlight Normal guibg=NONE ctermbg=None ]]
@@ -55,30 +87,6 @@ end
 require "lazy_setup"
 require "polish"
 require "mapping"
-
--- Ensure there is no global mapping for 'K' (user prefers manual preview mappings)
-pcall(vim.keymap.del, "n", "K")
-
--- Also ensure any mappings re-added by plugins or LSP are removed:
-vim.api.nvim_create_autocmd("VimEnter", {
-    callback = function()
-        -- ensure K does nothing globally
-        pcall(vim.keymap.del, "n", "K")
-        pcall(vim.keymap.set, "n", "K", "<Nop>", { silent = true })
-    end,
-})
-
--- When an LSP attaches, remove any buffer-local 'K' mapping in that buffer to avoid overrides
-vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(args)
-        local bufnr = args.buf
-        if bufnr then
-            -- remove any buffer-local K and set it to nop so on_attach handlers can't override
-            pcall(vim.keymap.del, "n", "K", { buffer = bufnr })
-            pcall(vim.keymap.set, "n", "K", "<Nop>", { buffer = bufnr, silent = true })
-        end
-    end,
-})
 
 require("notify").setup {
     background_colour = "#000000",
@@ -206,25 +214,22 @@ function CompileAndRunWithDebug()
 
     if filetype == "cpp" then
         compile_cmd = string.format("clang++ -g -O0 -o %s %s", output_file, filepath)
-        run_cmd = string.format("gdb %s", output_file)
+        run_cmd = string.format("gdb %s",output_file)
     elseif filetype == "c" then
         compile_cmd = string.format("clang -g -O0 -o %s %s", output_file, filepath)
         run_cmd = string.format("gdb %s", output_file)
     elseif filetype == "rust" then
         local cargo_toml = vim.fn.findfile("Cargo.toml", ".;")
         if cargo_toml ~= "" then
-            compile_cmd = ""
-            run_cmd = "cargo build && gdb target/debug/" .. filename
+            compile_cmd = "cargo build"
+            run_cmd = "gdb target/debug/" .. filename
         else
             compile_cmd = string.format("rustc -g %s -o %s", filepath, output_file)
             run_cmd = string.format("gdb ./%s", output_file)
         end
     elseif filetype == "go" then
-        compile_cmd = ""
-        run_cmd = string.format("gdb %s", filepath)
-    elseif filetype == "java" then
-        compile_cmd = string.format("javac -g -d %s %s", output_dir, filepath)
-        run_cmd = string.format("java -cp %s %s", output_dir, output_file)
+        compile_cmd = "go build -gcflags='all=-N -l' -o " .. output_file .. " " .. filepath
+        run_cmd = string.format("dlv exec %s", output_file)
     else
         vim.notify("Unsupported filetype: " .. filetype, vim.log.levels.ERROR)
         return
@@ -389,10 +394,6 @@ end
 -- clangd config
 -- clangd 配置
 local lspconfig = require "lspconfig"
--- Make sure completion capabilities from nvim-cmp (if available) are forwarded to clangd
-local has_cmp_nvim_lsp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-local clang_capabilities = vim.lsp.protocol.make_client_capabilities()
-if has_cmp_nvim_lsp then clang_capabilities = cmp_nvim_lsp.default_capabilities(clang_capabilities) end
 
 lspconfig.clangd.setup {
     cmd = {
@@ -424,42 +425,6 @@ lspconfig.clangd.setup {
         ".git"
     ),
     single_file_support = true,
-    -- forward capabilities from nvim-cmp so clangd provides detailed completion docs/signature resolving
-    capabilities = clang_capabilities,
-    -- on_attach: set common LSP keymaps and enable signature help integration if available
-    on_attach = function(client, bufnr)
-        local bufopts = { noremap = true, silent = true, buffer = bufnr }
-        -- add descriptive labels so UI/which-key can show them
-        -- Note: K mapping removed here so global or plugin mappings (lspsaga or default) handle hover.
-        -- If you want a buffer-local hover mapping, re-enable here.
-        pcall(
-            vim.keymap.set,
-            "n",
-            "gd",
-            vim.lsp.buf.definition,
-            vim.tbl_extend("force", bufopts, { desc = "LSP: Go to definition" })
-        )
-        pcall(
-            vim.keymap.set,
-            "n",
-            "gD",
-            vim.lsp.buf.declaration,
-            vim.tbl_extend("force", bufopts, { desc = "LSP: Go to declaration" })
-        )
-        pcall(
-            vim.keymap.set,
-            "i",
-            "<C-k>",
-            vim.lsp.buf.signature_help,
-            vim.tbl_extend("force", bufopts, { desc = "LSP: Signature help" })
-        )
-
-        -- If lsp_signature is installed and configured, attach it to this buffer to show parameter hints while typing
-        pcall(function()
-            local ok, lsp_sig = pcall(require, "lsp_signature")
-            if ok and lsp_sig and lsp_sig.on_attach then pcall(lsp_sig.on_attach, {}, bufnr) end
-        end)
-    end,
 }
 
 local util = require "lspconfig.util"

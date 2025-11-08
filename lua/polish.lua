@@ -115,9 +115,6 @@ local function show_macro_expansion()
         "go", -- Go
         "rust",
         "rs", -- Rust
-        "kotlin",
-        "kt",
-        "kts", -- Kotlin
         "lua", -- Lua
     }
     local is_allowed = false
@@ -645,3 +642,5 @@ return {
     show_macro_definition = show_macro_definition,
     clangd_expand_macro = clangd_expand_macro,
 }
+
+
