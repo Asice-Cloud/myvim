@@ -17,28 +17,32 @@ vim.filetype.add {
 
 -- 控制是否自动在 CursorHold 时弹出预览（默认关闭）
 vim.g.macro_preview_auto = false
+-- 可配置的边框颜色（可在 init.lua 或其他地方通过 vim.g 设置）
+vim.g.macro_float_border_color = vim.g.macro_float_border_color or "#ff77b1"
 
 -- 自定义悬浮窗口高亮组（不影响代码高亮）
 vim.api.nvim_set_hl(0, "MacroFloatNormal", {
-    -- bg = "#2d3748", -- 深蓝灰色背景
+    bg = "NONE", -- 透明背景
     fg = "#e2e8f0", -- 浅灰色文字
     blend = 10, -- 透明度
 })
 
 vim.api.nvim_set_hl(0, "MacroFloatBorder", {
-    bg = "#2d3748", -- 与背景一致
-    fg = "#ff77b1", -- 粉色边框
+    -- bg = "#2d3748", -- 与背景一致
+    bg = "NONE",
+    fg = vim.g.macro_float_border_color, -- 可配置的边框颜色
     bold = true,
 })
 
 vim.api.nvim_set_hl(0, "MacroFloatTitle", {
-    bg = "#ff77b1", -- 粉色背景
+    bg = "NONE", -- 透明标题背景
     fg = "#1a202c", -- 深色文字
     bold = true,
 })
 
 vim.api.nvim_set_hl(0, "MacroCodeBlock", {
-    bg = "#1a202c", -- 更深的背景用于代码块
+    -- bg = "#1a202c", -- 更深的背景用于代码块
+    bg = "NONE",
     fg = "#fbb6ce", -- 粉色代码文字
     italic = true,
 })
@@ -255,13 +259,17 @@ local function show_macro_expansion()
                     border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
                     focusable = true,
                     close_events = { "CursorMoved", "BufHidden", "InsertCharPre" },
-                    title = " 🔮 Symbol & Macro Preview ",
+                    -- title = " 🔮 Symbol & Macro Preview ",
                     title_pos = "center",
                     max_width = 100,
                     max_height = 25,
                     wrap = true,
                     style = "minimal",
-                    winhighlight = "Normal:MacroFloatNormal,FloatBorder:MacroFloatBorder,FloatTitle:MacroFloatTitle,@markup.strong.markdown_inline:MacroLabel,@markup.quote.markdown:MacroQuote,@markup.raw.markdown_inline:MacroQuote",
+                    -- make the floating window blend with the background more so
+                    -- it appears transparent even if colorschemes set defaults
+                    -- (increase this value if you want stronger transparency)
+                    winblend = 10,
+                    winhighlight = "Normal:MacroFloatNormal,NormalFloat:MacroFloatNormal,FloatBorder:MacroFloatBorder,FloatTitle:MacroFloatTitle,@markup.strong.markdown_inline:MacroLabel,@markup.quote.markdown:MacroQuote,@markup.raw.markdown_inline:MacroQuote",
                 })
             end
         end)
@@ -404,7 +412,9 @@ function show_macro_definition(word, bufnr)
             max_height = 20,
             wrap = true,
             style = "minimal",
-            winhighlight = "Normal:MacroFloatNormal,FloatBorder:MacroFloatBorder,FloatTitle:MacroFloatTitle,@markup.strong.markdown_inline:MacroLabel,@markup.quote.markdown:MacroQuote,@markup.raw.markdown_inline:MacroQuote",
+            -- stronger blend so the inner background becomes visually transparent
+            winblend = 40,
+            winhighlight = "Normal:MacroFloatNormal,NormalFloat:MacroFloatNormal,FloatBorder:MacroFloatBorder,FloatTitle:MacroFloatTitle,@markup.strong.markdown_inline:MacroLabel,@markup.quote.markdown:MacroQuote,@markup.raw.markdown_inline:MacroQuote",
         })
         return true
     end
@@ -565,6 +575,11 @@ vim.api.nvim_create_autocmd("ColorScheme", {
         vim.api.nvim_set_hl(0, "Normal", { bg = "NONE", ctermbg = "NONE" })
         vim.api.nvim_set_hl(0, "NormalNC", { bg = "NONE", ctermbg = "NONE" })
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE", ctermbg = "NONE" })
+    -- Reapply custom macro float highlights so colorschemes won't override them
+    vim.api.nvim_set_hl(0, "MacroFloatNormal", { bg = "NONE", fg = "#e2e8f0" })
+    vim.api.nvim_set_hl(0, "MacroFloatBorder", { bg = "NONE", fg = vim.g.macro_float_border_color or "#ff77b1", bold = true })
+    vim.api.nvim_set_hl(0, "MacroFloatTitle", { bg = "NONE", fg = "#1a202c", bold = true })
+    vim.api.nvim_set_hl(0, "MacroCodeBlock", { bg = "NONE", fg = "#fbb6ce", italic = true })
         vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", ctermbg = "NONE" })
         vim.api.nvim_set_hl(0, "SignColumn", { bg = "NONE", ctermbg = "NONE" })
         vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE", ctermbg = "NONE" })
@@ -599,6 +614,31 @@ vim.defer_fn(function()
     vim.cmd "hi CursorLineNr guibg=NONE ctermbg=NONE"
     vim.cmd "hi EndOfBuffer guibg=NONE ctermbg=NONE"
 end, 100)
+
+-- Ensure our floating preview highlights are re-applied after startup/plugins
+-- Some plugins or late colorscheme changes may overwrite these groups; pressing
+-- F8 previously ran code that set NormalFloat/FloatBorder, which is why the
+-- preview became transparent only after that. To make transparency reliable
+-- we reapply our highlights on VimEnter and a few delayed retries.
+vim.api.nvim_create_autocmd("VimEnter", {
+    callback = function()
+        local function apply_float_hls()
+            vim.api.nvim_set_hl(0, "MacroFloatNormal", { bg = "NONE", fg = "#e2e8f0" })
+            vim.api.nvim_set_hl(0, "MacroFloatBorder", { bg = "NONE", fg = vim.g.macro_float_border_color or "#ff77b1", bold = true })
+            vim.api.nvim_set_hl(0, "MacroFloatTitle", { bg = "NONE", fg = "#1a202c", bold = true })
+            vim.api.nvim_set_hl(0, "MacroCodeBlock", { bg = "NONE", fg = "#fbb6ce", italic = true })
+            -- Also ensure the standard float groups are transparent
+            vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE", ctermbg = "NONE" })
+            vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", ctermbg = "NONE" })
+        end
+
+        -- immediate
+        apply_float_hls()
+        -- a couple of delayed retries to catch late plugin/theme overrides
+        vim.defer_fn(apply_float_hls, 200)
+        vim.defer_fn(apply_float_hls, 800)
+    end,
+})
 
 vim.g.clang_format_style_options = {
     AccessModifierOffset = -4,

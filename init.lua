@@ -508,6 +508,9 @@ local function symbol_info()
             focus = false,
             border = require("lspconfig.ui.windows").default_options.border or "single",
             title = "Symbol Info",
+            -- stronger blend so the inner background becomes visually transparent
+            winblend = 40,
+            winhighlight = "Normal:MacroFloatNormal,NormalFloat:MacroFloatNormal,FloatBorder:MacroFloatBorder,FloatTitle:MacroFloatTitle",
         })
     end, bufnr)
 end
