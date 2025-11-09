@@ -1,5 +1,7 @@
 vim.keymap.set("n", "<Esc>", "<Esc>", { desc = "Force Esc to remain Esc in normal mode", noremap = true })
 
+vim.keymap.set("n", "H", "<Nop>", { noremap = true, silent = true, desc = "Disable Shift-H" })
+
 -- Early filter for specific deprecation messages so they don't appear during
 -- plugin startup. Placed here before `lazy` is required so messages emitted
 -- during plugin setup can be filtered.

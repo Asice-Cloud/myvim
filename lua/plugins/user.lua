@@ -632,7 +632,7 @@ return {
                 },
             }
 
-            rust_tools.setup {
+            rust_tools.setup{
                 server = server_opts,
                 tools = {
                     inlay_hints = {
@@ -689,6 +689,17 @@ return {
             -- map("n", "K", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
             -- ensure no global K mapping remains from lspsaga (remove if present)
             pcall(vim.keymap.del, "n", "K")
+            -- Also remove any buffer-local 'K' mapping created by LSP or other plugins when a server attaches.
+            -- This catches mappings that are set with the {buffer=bufnr} option which vim.keymap.del
+            -- without a buffer cannot remove.
+            vim.api.nvim_create_autocmd("LspAttach", {
+                callback = function(args)
+                    pcall(vim.keymap.del, "n", "K", { buffer = args.buf })
+                end,
+            })
+            -- As a final safety, set a global no-op for 'K' so it doesn't fall back to any default behavior.
+            -- Buffer-local mappings will still take precedence, but the autocmd above removes those on attach.
+            pcall(vim.keymap.set, "n", "K", "<nop>", { silent = true })
             map("n", "<leader>sl", "<cmd>Lspsaga show_line_diagnostics<CR>", { silent = true })
             map("n", "[e", "<cmd>Lspsaga diagnostic_jump_prev<CR>", { silent = true })
             map("n", "]e", "<cmd>Lspsaga diagnostic_jump_next<CR>", { silent = true })
