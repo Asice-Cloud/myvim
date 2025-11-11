@@ -120,6 +120,13 @@ local function show_macro_expansion()
         "rust",
         "rs", -- Rust
         "lua", -- Lua
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "ts",
+        "tsx",
+        "jsx",
     }
     local is_allowed = false
     for _, ft in ipairs(allowed_filetypes) do
@@ -178,6 +185,16 @@ local function show_macro_expansion()
                     or string.find(content_str, word, 1, true)
                 )
             then
+                -- 选择代码块语言以便语法高亮（基于文件类型）
+                local code_lang = "c"
+                if filetype:match("typescript") or filetype == "ts" or filetype == "tsx" then
+                    code_lang = "ts"
+                elseif filetype:match("javascript") or filetype == "js" or filetype == "jsx" or filetype == "javascriptreact" then
+                    code_lang = "js"
+                elseif filetype == "cpp" or filetype == "c++" then
+                    code_lang = "cpp"
+                end
+
                 -- 格式化内容，使其更美观
                 local formatted_content = {}
 
@@ -221,7 +238,7 @@ local function show_macro_expansion()
                         table.insert(formatted_content, formatted_line)
                     elseif string.find(line, "#define", 1, true) then
                         table.insert(formatted_content, "📌 Macro Definition:")
-                        table.insert(formatted_content, "```cpp")
+                        table.insert(formatted_content, "```" .. code_lang)
                         table.insert(formatted_content, line)
                         table.insert(formatted_content, "```")
                     elseif
@@ -230,14 +247,14 @@ local function show_macro_expansion()
                     then
                         table.insert(formatted_content, "🔧 Macro Info:")
                         macro_info_inserted = true
-                        table.insert(formatted_content, "```c")
+                        table.insert(formatted_content, "```" .. code_lang)
                         table.insert(formatted_content, line)
                         table.insert(formatted_content, "```")
                     elseif
                         (string.find(line, "macro", 1, true) or string.find(line, "MACRO", 1, true))
                         and macro_info_inserted
                     then
-                        table.insert(formatted_content, "```c")
+                        table.insert(formatted_content, "```" .. code_lang)
                         table.insert(formatted_content, line)
                         table.insert(formatted_content, "```")
                     elseif string.find(line, "expand", 1, true) or string.find(line, "EXPAND", 1, true) then
@@ -335,6 +352,34 @@ function show_macro_definition(word, bufnr)
             local const_pattern2 = "^%s*" .. word .. "%s*=%s*(.*)$"
             match = string.match(line, const_pattern1) or string.match(line, const_pattern2)
             definition_type = "Lua Variable"
+        elseif filetype == "javascript"
+            or filetype == "javascriptreact"
+            or filetype == "typescript"
+            or filetype == "typescriptreact"
+            or filetype == "ts"
+            or filetype == "tsx"
+            or filetype == "jsx"
+        then
+            -- JavaScript / TypeScript: const/let/var, export, function, class, type, interface
+            local patterns = {
+                "^%s*export%s+const%s+" .. word .. "%s*=%s*(.*)$",
+                "^%s*const%s+" .. word .. "%s*=%s*(.*)$",
+                "^%s*let%s+" .. word .. "%s*=%s*(.*)$",
+                "^%s*var%s+" .. word .. "%s*=%s*(.*)$",
+                "^%s*export%s+function%s+" .. word .. "%s*%((.*)%)",
+                "^%s*function%s+" .. word .. "%s*%((.*)%)",
+                "^%s*class%s+" .. word .. "%s*" ,
+                "^%s*type%s+" .. word .. "%s*=%s*(.*)$",
+                "^%s*interface%s+" .. word .. "%s*{",
+            }
+            for _, pat in ipairs(patterns) do
+                local m = string.match(line, pat)
+                if m then
+                    match = m
+                    break
+                end
+            end
+            definition_type = "JS/TS Symbol"
         end
 
         if match then
@@ -349,6 +394,14 @@ function show_macro_definition(word, bufnr)
     end
 
     if macro_definition then
+        -- choose code fence language for better syntax highlighting
+        local def_lang = "c"
+        if filetype:match("typescript") or filetype == "ts" or filetype == "tsx" then
+            def_lang = "ts"
+        elseif filetype:match("javascript") or filetype == "js" or filetype == "jsx" or filetype == "javascriptreact" then
+            def_lang = "js"
+        end
+
         local content = {
             "# 🔍 " .. word .. " - " .. macro_definition.type,
             "",
@@ -363,13 +416,13 @@ function show_macro_definition(word, bufnr)
             and string.find(macro_definition.definition, ")", 1, true)
         then
             -- 如果是函数宏，特别标记
-            table.insert(content, "```" .. (filetype or "c"))
+            table.insert(content, "```" .. def_lang)
             table.insert(content, macro_definition.definition)
             table.insert(content, "```")
             table.insert(content, "🔵 **Function-like Definition**")
         else
             -- 普通宏定义
-            table.insert(content, "```" .. (filetype or "c"))
+            table.insert(content, "```" .. def_lang)
             table.insert(content, macro_definition.definition)
             table.insert(content, "```")
             table.insert(content, "📌 **Constant Definition**")
@@ -385,12 +438,12 @@ function show_macro_definition(word, bufnr)
                 string.find(macro_definition.expansion, "(", 1, true)
                 and string.find(macro_definition.expansion, ")", 1, true)
             then
-                table.insert(content, "```" .. (filetype or "c"))
+                table.insert(content, "```" .. def_lang)
                 table.insert(content, macro_definition.expansion)
                 table.insert(content, "```")
                 table.insert(content, "🔄 **Function Call/Expression**")
             else
-                table.insert(content, "```" .. (filetype or "c"))
+                table.insert(content, "```" .. def_lang)
                 table.insert(content, macro_definition.expansion)
                 table.insert(content, "```")
                 table.insert(content, "💾 **Constant Value**")
@@ -446,6 +499,13 @@ local function clangd_expand_macro()
         "kt",
         "kts", -- Kotlin
         "lua", -- Lua
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "ts",
+        "tsx",
+        "jsx",
     }
     local is_allowed = false
     for _, ft in ipairs(allowed_filetypes) do
@@ -505,6 +565,13 @@ vim.api.nvim_create_autocmd("FileType", {
         "kt",
         "kts", -- Kotlin
         "lua", -- Lua
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "ts",
+        "tsx",
+        "jsx",
     },
     callback = function()
         -- 为支持的编程语言设置宏/符号展开快捷键
