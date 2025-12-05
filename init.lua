@@ -11,27 +11,23 @@ do
         if type(msg) == "string" then
             -- Filter messages that mention the deprecated API used by some plugins
             -- Example: "vim.lsp.get_active_clients() is deprecated. Run ':checkhealth vim.deprecated'..."
-            if msg:match("get_active_clients") or msg:match("checkhealth vim%.deprecated") then
-                return
-            end
+            if msg:match "get_active_clients" or msg:match "checkhealth vim%.deprecated" then return end
             -- Also ignore short deprecation mentions to avoid noisy startup messages
-            if msg:match("[Dd]eprecat") and (msg:match("vim%.lsp") or msg:match("get_active_clients")) then
-                return
-            end
+            if msg:match "[Dd]eprecat" and (msg:match "vim%.lsp" or msg:match "get_active_clients") then return end
         end
         return _notify(msg, level, opts)
     end
 end
 
-    -- Provide a temporary compatibility shim: if running on Neovim with
-    -- `vim.lsp.get_clients`, map the deprecated `get_active_clients` to it so
-    -- plugins calling the old API won't trigger deprecation messages.
-    if vim.lsp and type(vim.lsp.get_clients) == "function" then
-        vim.lsp.get_active_clients = function(filters)
-            -- `vim.lsp.get_clients` accepts a table of filters in newer Neovim
-            return vim.lsp.get_clients(filters)
-        end
+-- Provide a temporary compatibility shim: if running on Neovim with
+-- `vim.lsp.get_clients`, map the deprecated `get_active_clients` to it so
+-- plugins calling the old API won't trigger deprecation messages.
+if vim.lsp and type(vim.lsp.get_clients) == "function" then
+    vim.lsp.get_active_clients = function(filters)
+        -- `vim.lsp.get_clients` accepts a table of filters in newer Neovim
+        return vim.lsp.get_clients(filters)
     end
+end
 
 -- This file simply bootstraps the installation of Lazy.nvim and then calls other files for execution
 -- This file doesn't necessarily need to be touched, BE CAUTIOUS editing this file and proceed at your own risk.
@@ -51,7 +47,7 @@ if not (vim.env.LAZY or (vim.uv or vim.loop).fs_stat(lazypath)) then
 end
 vim.opt.rtp:prepend(lazypath)
 -- 设置字体
-vim.opt.guifont = "JetBrainsMono Nerd Font Mono:h17"
+vim.opt.guifont = "FantasqueSansM Nerd Font Mono:h17"
 
 vim.g.neovide_remember_window_size = true
 local VimExtConfig = [[ highlight Normal guibg=NONE ctermbg=None ]]
@@ -154,7 +150,7 @@ function CompileAndRunFile()
     --vim.api.nvim_set_hl(0, "StatusLine", { bg = "gray", fg = "white" })
     --vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "gray", fg = "gray" })
     -- 创建浮动终端窗口的函数
-    function open_floating_terminal(cmd)
+    local function open_floating_terminal(cmd)
         local buf = vim.api.nvim_create_buf(false, true) -- 创建一个新的空缓冲区
         local width = vim.o.columns
         local height = vim.o.lines
@@ -208,7 +204,7 @@ function CompileAndRunWithDebug()
     local filename = vim.fn.expand "%:t:r"
     local filetype = vim.bo.filetype
     local output_dir = "build/bin"
-    outname = filename .. "_debug"
+    local outname = filename .. "_debug"
     local output_file = string.format("%s/%s", output_dir, outname)
     vim.fn.mkdir(output_dir, "p")
     local compile_cmd = ""
@@ -216,7 +212,7 @@ function CompileAndRunWithDebug()
 
     if filetype == "cpp" then
         compile_cmd = string.format("clang++ -g -O0 -o %s %s", output_file, filepath)
-        run_cmd = string.format("gdb %s",output_file)
+        run_cmd = string.format("gdb %s", output_file)
     elseif filetype == "c" then
         compile_cmd = string.format("clang -g -O0 -o %s %s", output_file, filepath)
         run_cmd = string.format("gdb %s", output_file)

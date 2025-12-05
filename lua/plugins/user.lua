@@ -351,6 +351,11 @@ return {
     --   config = function() require("ccls").setup { lsp = { use_defaults = true } } end,
     -- },
     {
+        "catppuccin/nvim",
+        -- colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
+        -- config = function() vim.cmd "colorscheme catppuccin-frappe" end,
+    },
+    {
         "neanias/everforest-nvim",
         config = function()
             vim.g.everforest_background = "hard" -- 选项: 'hard', 'medium', 'soft'
@@ -632,7 +637,7 @@ return {
                 },
             }
 
-            rust_tools.setup{
+            rust_tools.setup {
                 server = server_opts,
                 tools = {
                     inlay_hints = {
@@ -673,7 +678,7 @@ return {
                 },
                 lightbulb = {
                     enable = true,
-                    sign = false,        -- disable signcolumn icon to avoid overlapping LSP signs
+                    sign = false, -- disable signcolumn icon to avoid overlapping LSP signs
                     virtual_text = true, -- use virtual text as alternative indicator
                     enable_in_insert = false,
                 },
@@ -693,9 +698,7 @@ return {
             -- This catches mappings that are set with the {buffer=bufnr} option which vim.keymap.del
             -- without a buffer cannot remove.
             vim.api.nvim_create_autocmd("LspAttach", {
-                callback = function(args)
-                    pcall(vim.keymap.del, "n", "K", { buffer = args.buf })
-                end,
+                callback = function(args) pcall(vim.keymap.del, "n", "K", { buffer = args.buf }) end,
             })
             -- As a final safety, set a global no-op for 'K' so it doesn't fall back to any default behavior.
             -- Buffer-local mappings will still take precedence, but the autocmd above removes those on attach.
