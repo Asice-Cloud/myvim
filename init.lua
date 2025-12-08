@@ -90,7 +90,7 @@ require("notify").setup {
     background_colour = "#000000",
 }
 
--- F10 compile file
+-- F8 compile file
 
 function CompileAndRunFile()
     -- 获取当前文件路径、文件名和文件类型
@@ -211,10 +211,10 @@ function CompileAndRunWithDebug()
     local run_cmd = ""
 
     if filetype == "cpp" then
-        compile_cmd = string.format("clang++ -g -O0 -o %s %s", output_file, filepath)
+        compile_cmd = string.format("clang++ -g -std=c++23 -O0 -o %s %s", output_file, filepath)
         run_cmd = string.format("gdb %s", output_file)
     elseif filetype == "c" then
-        compile_cmd = string.format("clang -g -O0 -o %s %s", output_file, filepath)
+        compile_cmd = string.format("clang -g -std=c2x -O0 -o %s %s", output_file, filepath)
         run_cmd = string.format("gdb %s", output_file)
     elseif filetype == "rust" then
         local cargo_toml = vim.fn.findfile("Cargo.toml", ".;")

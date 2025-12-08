@@ -401,7 +401,6 @@ return {
         "vim-airline/vim-airline",
         config = function()
             -- 确保 airline 配置在插件加载后设置
-            vim.g.airline_powerline_fonts = 1 -- 如果你有 powerline 字体
             vim.g["airline#extensions#tabline#enabled"] = 1
             vim.g["airline#extensions#tabline#buffer_nr_show"] = 1
             vim.g.airline_extensions_tabline_formatter = "default"
@@ -413,7 +412,7 @@ return {
         config = function()
             -- 在主题插件加载后设置主题
             vim.defer_fn(function()
-                vim.g.airline_theme = "base16_monokai"
+                vim.g.airline_theme = "violet"
                 if vim.fn.exists ":AirlineRefresh" > 0 then vim.cmd "AirlineRefresh" end
             end, 100)
         end,
