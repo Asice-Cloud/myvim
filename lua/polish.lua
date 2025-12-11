@@ -187,9 +187,14 @@ local function show_macro_expansion()
             then
                 -- 选择代码块语言以便语法高亮（基于文件类型）
                 local code_lang = "c"
-                if filetype:match("typescript") or filetype == "ts" or filetype == "tsx" then
+                if filetype:match "typescript" or filetype == "ts" or filetype == "tsx" then
                     code_lang = "ts"
-                elseif filetype:match("javascript") or filetype == "js" or filetype == "jsx" or filetype == "javascriptreact" then
+                elseif
+                    filetype:match "javascript"
+                    or filetype == "js"
+                    or filetype == "jsx"
+                    or filetype == "javascriptreact"
+                then
                     code_lang = "js"
                 elseif filetype == "cpp" or filetype == "c++" then
                     code_lang = "cpp"
@@ -352,7 +357,8 @@ function show_macro_definition(word, bufnr)
             local const_pattern2 = "^%s*" .. word .. "%s*=%s*(.*)$"
             match = string.match(line, const_pattern1) or string.match(line, const_pattern2)
             definition_type = "Lua Variable"
-        elseif filetype == "javascript"
+        elseif
+            filetype == "javascript"
             or filetype == "javascriptreact"
             or filetype == "typescript"
             or filetype == "typescriptreact"
@@ -368,7 +374,7 @@ function show_macro_definition(word, bufnr)
                 "^%s*var%s+" .. word .. "%s*=%s*(.*)$",
                 "^%s*export%s+function%s+" .. word .. "%s*%((.*)%)",
                 "^%s*function%s+" .. word .. "%s*%((.*)%)",
-                "^%s*class%s+" .. word .. "%s*" ,
+                "^%s*class%s+" .. word .. "%s*",
                 "^%s*type%s+" .. word .. "%s*=%s*(.*)$",
                 "^%s*interface%s+" .. word .. "%s*{",
             }
@@ -396,9 +402,14 @@ function show_macro_definition(word, bufnr)
     if macro_definition then
         -- choose code fence language for better syntax highlighting
         local def_lang = "c"
-        if filetype:match("typescript") or filetype == "ts" or filetype == "tsx" then
+        if filetype:match "typescript" or filetype == "ts" or filetype == "tsx" then
             def_lang = "ts"
-        elseif filetype:match("javascript") or filetype == "js" or filetype == "jsx" or filetype == "javascriptreact" then
+        elseif
+            filetype:match "javascript"
+            or filetype == "js"
+            or filetype == "jsx"
+            or filetype == "javascriptreact"
+        then
             def_lang = "js"
         end
 
@@ -642,11 +653,15 @@ vim.api.nvim_create_autocmd("ColorScheme", {
         vim.api.nvim_set_hl(0, "Normal", { bg = "NONE", ctermbg = "NONE" })
         vim.api.nvim_set_hl(0, "NormalNC", { bg = "NONE", ctermbg = "NONE" })
         vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE", ctermbg = "NONE" })
-    -- Reapply custom macro float highlights so colorschemes won't override them
-    vim.api.nvim_set_hl(0, "MacroFloatNormal", { bg = "NONE", fg = "#e2e8f0" })
-    vim.api.nvim_set_hl(0, "MacroFloatBorder", { bg = "NONE", fg = vim.g.macro_float_border_color or "#ff77b1", bold = true })
-    vim.api.nvim_set_hl(0, "MacroFloatTitle", { bg = "NONE", fg = "#1a202c", bold = true })
-    vim.api.nvim_set_hl(0, "MacroCodeBlock", { bg = "NONE", fg = "#fbb6ce", italic = true })
+        -- Reapply custom macro float highlights so colorschemes won't override them
+        vim.api.nvim_set_hl(0, "MacroFloatNormal", { bg = "NONE", fg = "#e2e8f0" })
+        vim.api.nvim_set_hl(
+            0,
+            "MacroFloatBorder",
+            { bg = "NONE", fg = vim.g.macro_float_border_color or "#ff77b1", bold = true }
+        )
+        vim.api.nvim_set_hl(0, "MacroFloatTitle", { bg = "NONE", fg = "#1a202c", bold = true })
+        vim.api.nvim_set_hl(0, "MacroCodeBlock", { bg = "NONE", fg = "#fbb6ce", italic = true })
         vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", ctermbg = "NONE" })
         vim.api.nvim_set_hl(0, "SignColumn", { bg = "NONE", ctermbg = "NONE" })
         vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE", ctermbg = "NONE" })
@@ -691,7 +706,11 @@ vim.api.nvim_create_autocmd("VimEnter", {
     callback = function()
         local function apply_float_hls()
             vim.api.nvim_set_hl(0, "MacroFloatNormal", { bg = "NONE", fg = "#e2e8f0" })
-            vim.api.nvim_set_hl(0, "MacroFloatBorder", { bg = "NONE", fg = vim.g.macro_float_border_color or "#ff77b1", bold = true })
+            vim.api.nvim_set_hl(
+                0,
+                "MacroFloatBorder",
+                { bg = "NONE", fg = vim.g.macro_float_border_color or "#ff77b1", bold = true }
+            )
             vim.api.nvim_set_hl(0, "MacroFloatTitle", { bg = "NONE", fg = "#1a202c", bold = true })
             vim.api.nvim_set_hl(0, "MacroCodeBlock", { bg = "NONE", fg = "#fbb6ce", italic = true })
             -- Also ensure the standard float groups are transparent
@@ -715,7 +734,6 @@ vim.g.clang_format_style_options = {
     BreakBeforeBraces = "Stroustrup",
 }
 
--- Ensure buffers use 4-space indentation. Some plugins (guess-indent, formatters)
 -- or LSP/on-save formatting can change buffer-local settings; enforce after
 -- common events to make vim.opt options take effect per-buffer.
 local function enforce_4_space_indent(bufnr)
@@ -749,5 +767,3 @@ return {
     show_macro_definition = show_macro_definition,
     clangd_expand_macro = clangd_expand_macro,
 }
-
-

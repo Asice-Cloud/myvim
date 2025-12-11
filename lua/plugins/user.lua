@@ -541,10 +541,10 @@ return {
         enabled = false,
     },
     -- disable guess-indent to avoid it overwriting our indent settings
-    {
-        "NMAC427/guess-indent.nvim",
-        enabled = false,
-    },
+    -- {
+    --     "NMAC427/guess-indent.nvim",
+    --     enabled = false,
+    -- },
     -- You can also easily customize additional setup of plugins that is outside of the plugin's setup call
     {
         "L3MON4D3/LuaSnip",
