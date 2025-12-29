@@ -115,7 +115,8 @@ function CompileAndRunFile()
         run_cmd = string.format("./%s", output_file)
     elseif filetype == "cuda" then
         compile_cmd =
-            string.format("nvcc -ccbin g++-14 -o %s %s -O2 -Wno-deprecated-gpu-targets ", output_file, filepath)
+            -- string.format("nvcc -ccbin g++-14 -o %s %s -O2 -Wno-deprecated-gpu-targets ", output_file, filepath)
+            string.format("nvcc -ccbin g++ -o %s %s -O2 -Wno-deprecated-gpu-targets ", output_file, filepath)
         run_cmd = string.format("./%s", output_file)
     elseif filetype == "c" then
         compile_cmd = string.format("clang -std=c2x -o %s %s -O2", output_file, filepath)
