@@ -9,11 +9,13 @@ return {
   ---@type AstroUIOpts
   opts = {
     -- change colorscheme
-    colorscheme = "sonokai",
+    -- colorscheme = "sonokai",
     -- AstroUI allows you to easily modify highlight groups easily for any and all colorschemes
     highlights = {
       init = { -- this table overrides highlights in all themes
         -- Normal = { bg = "#000000" },
+        LineNr = { fg = "#d03cb0" }, -- 相对行号颜色
+        CursorLineNr = { fg = "#19e8de", bold = false }, -- 当前行号颜色
       },
       astrodark = { -- a table of overrides/changes when applying the astrotheme theme
         -- Normal = { bg = "#000000" },
