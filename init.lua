@@ -126,7 +126,7 @@ function CompileAndRunFile()
     elseif filetype == "go" then
         run_cmd = string.format("go run %s", filepath)
     elseif filetype == "javascript" then
-        run_cmd = string.format("node %s", filepath)
+        run_cmd = string.format("deno %s", filepath)
     elseif filetype == "java" then
         compile_cmd = string.format("javac -d %s %s", output_dir, filepath)
         run_cmd = string.format("java -cp %s %s", output_dir, filename)

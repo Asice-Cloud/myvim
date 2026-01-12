@@ -13,6 +13,8 @@ F4:  use cmake-tool build and run current file, CMakeLists.txt or run.sh require
 
 F5:  debug by dap\lldb
 
+F6: compile c/cpp , rust ,go with debug info
+
 F7:  open a split screen terminal
 
 F8: build and run current file. Support c/cpp, java, js, Go, pyhton, lua, rust. Here I set build&run cpp by c++23
