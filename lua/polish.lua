@@ -298,6 +298,9 @@ local function show_macro_expansion()
     end
 end
 
+-- Toggle keymap for DAP virtual text (set after plugin is installed/loaded)
+vim.keymap.set("n", "<leader>dt", ":DapVirtualTextToggle<CR>", { noremap = true, silent = true })
+
 -- 查找宏定义的辅助函数
 function show_macro_definition(word, bufnr)
     -- 定义带颜色的引用符号
