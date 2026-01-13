@@ -13,7 +13,7 @@ F4:  use cmake-tool build and run current file, CMakeLists.txt or run.sh require
 
 F5:  debug by dap\lldb
 
-F6: compile c/cpp , rust ,go with debug info
+F6: compile c/cpp , rust  with debug info
 
 F7:  open a split screen terminal
 
@@ -36,6 +36,7 @@ normal, click `<S-l>` (L) , then will show preview of definition or macro expans
 
 `<C-N>`: select a word, come into multi-cursor mode
 
+`\ or |`: devide termial split or vertical
 
 Press `space` then you will get some hint for key combinations
 
