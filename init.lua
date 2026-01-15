@@ -212,8 +212,62 @@ function CompileAndRunFile()
         end
     end
 
-    -- 运行生成的可执行文件或脚本
-    open_floating_terminal(run_cmd)
+    -- 提示可选运行参数并运行（仅在有运行命令时）
+    if run_cmd ~= "" then
+        -- compute same geometry as open_floating_terminal so the input window matches the terminal
+        local width = vim.o.columns
+        local height = vim.o.lines
+        local term_h = math.ceil(height * 0.6)
+        local term_w = math.ceil(width * 0.8)
+        local term_row = math.ceil((height - term_h) / 3)
+        local term_col = math.ceil((width - term_w) / 2)
+
+        local input_h = 1
+        -- make input narrower (70% of terminal width) with a sensible minimum
+        local input_w = math.max(40, math.ceil(term_w * 0.7))
+        -- horizontally center the input inside the terminal area
+        local input_col = term_col + math.floor((term_w - input_w) / 2)
+        -- center vertically then shift up ~20% of term height
+        local center_row = term_row + math.floor((term_h - input_h) / 2)
+        local shift_up = math.ceil(term_h * 0.20)
+        local input_row = math.max(term_row, center_row - shift_up)
+
+        local ok, _ = pcall(function()
+            -- create a prompt buffer and open a floating window matching the terminal size/pos
+            local buf = vim.api.nvim_create_buf(false, true)
+            vim.api.nvim_buf_set_option(buf, 'buftype', 'prompt')
+            vim.fn.prompt_setprompt(buf, "Optional run arguments: ")
+            local win_opts = {
+                relative = 'editor',
+                row = input_row,
+                col = input_col,
+                width = input_w,
+                height = input_h,
+                style = 'minimal',
+                border = 'rounded',
+            }
+            local win = vim.api.nvim_open_win(buf, true, win_opts)
+            vim.fn.prompt_setcallback(buf, function(input)
+                pcall(vim.api.nvim_win_close, win, true)
+                pcall(vim.api.nvim_buf_delete, buf, {force = true})
+                if input and input ~= "" then
+                    run_cmd = run_cmd .. " " .. input
+                end
+                open_floating_terminal(run_cmd)
+            end)
+            vim.cmd('startinsert')
+        end)
+        if not ok then
+            -- fallback to simple input
+            local extra_args = vim.fn.input("Optional run arguments (append, leave empty for none): ")
+            if extra_args and extra_args ~= "" then
+                run_cmd = run_cmd .. " " .. extra_args
+            end
+            open_floating_terminal(run_cmd)
+        end
+    else
+        vim.notify("No run command for this filetype.", vim.log.levels.WARN)
+    end
 end
 
 vim.api.nvim_set_keymap("n", "<F8>", ":lua CompileAndRunFile()<CR>", {
@@ -524,7 +578,7 @@ if adapter_path and vim.loop.fs_stat(adapter_path) then
             return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
         end,
         cwd = "${workspaceFolder}",
-        stopOnEntry = false
+        stopOnEntry = true
     })
     -- Launch with args (quote-aware parsing)
     table.insert(dap.configurations.cpp, {
@@ -539,7 +593,7 @@ if adapter_path and vim.loop.fs_stat(adapter_path) then
             return parse_cmdline(input)
         end,
         cwd = "${workspaceFolder}",
-        stopOnEntry = false
+        stopOnEntry = true
     })
     dap.configurations.c = dap.configurations.cpp
 
@@ -553,7 +607,7 @@ if adapter_path and vim.loop.fs_stat(adapter_path) then
                 "file")
         end,
         cwd = "${workspaceFolder}",
-        stopOnEntry = false
+        stopOnEntry = true
     })
     -- Rust: launch with args (quote-aware parsing)
     table.insert(dap.configurations.rust, {
@@ -568,7 +622,7 @@ if adapter_path and vim.loop.fs_stat(adapter_path) then
             return parse_cmdline(input)
         end,
         cwd = "${workspaceFolder}",
-        stopOnEntry = false
+        stopOnEntry = true
     })
 else
     -- adapter_path not found; do not register codelldb to avoid errors
