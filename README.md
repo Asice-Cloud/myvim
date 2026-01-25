@@ -26,7 +26,7 @@ F9:  add a broken point for debug on hand
 
 gd: Goto defination
 ga: get code actions
-gh: lsp_finder
+or you can check explict function: `gr`, and show more option
 
 normal, click `<S-l>` (L) , then will show preview of definition or macro expansion
 

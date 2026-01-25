@@ -28,6 +28,9 @@ vim.keymap.set({ "v", "n" }, "gy", "<cmd>Telescope lsp_type_definitions<CR>", { 
 -- gd 查找定义
 vim.keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", { desc = "Goto definition" })
 
+-- gr 查找引用（使用 Telescope 的 lsp_references）
+vim.keymap.set("n", "gr", "<cmd>Telescope lsp_references<CR>", { desc = "Goto references" })
+
 -- Find Words (Telescope live_grep)
 vim.keymap.set("n", "<leader>fw", "<cmd>Telescope live_grep<CR>", { desc = "Find Words" })
 vim.api.nvim_set_keymap("n", "<C-F6>", "<cmd>CompilerToggleResults<cr>", { noremap = true, silent = true })
