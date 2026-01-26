@@ -705,8 +705,7 @@ return {
             -- useful keymaps for lspsaga features
             local map = vim.keymap.set
             map("n", "gh", "<cmd>Lspsaga lsp_finder<CR>", { silent = true }) -- find references/definitions
-            map("n", "gr", "<cmd>Lspsaga rename<CR>", { silent = true })
-            map("n", "ga", "<cmd>Lspsaga code_action<CR>", { silent = true })
+            -- map("n", "ga", "<cmd>Lspsaga code_action<CR>", { silent = true })
             -- map("n", "K", "<cmd>Lspsaga hover_doc<CR>", { silent = true })
             -- ensure no global K mapping remains from lspsaga (remove if present)
             pcall(vim.keymap.del, "n", "K")
