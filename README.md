@@ -24,8 +24,9 @@ F9:  add a broken point for debug on hand
 
 `<C-z> <C-x>` shift opened file (buffer)
 
-gd: Goto defination
-ga: get code actions
+`gd`: Goto defination
+`ga`: get code actions
+`gk`: go to reference 
 or you can check explict function: `gr`, and show more option
 
 normal, click `<S-l>` (L) , then will show preview of definition or macro expansion
