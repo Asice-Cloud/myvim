@@ -65,6 +65,7 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile", "LspAttach" }, {
     callback = function(args)
         -- 激活并在 pyright 的 before_init 中注入（如果你已实现 before_init）
         local py, venv = M.activate_venv_for_buffer(args.buf)
+        vim.notify("Activated venv: " .. (venv or "none"), vim.log.levels.DEBUG)
         -- 如果想，触发 LSP 重启以让 pyright 重新使用新的环境（可选）
         if py then
             -- 延迟少量时间再重启，避免频繁重启
