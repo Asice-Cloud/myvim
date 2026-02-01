@@ -1,12 +1,12 @@
 vim.keymap.set("n", "<Esc>", "<Esc>", {
     desc = "Force Esc to remain Esc in normal mode",
-    noremap = true
+    noremap = true,
 })
 
 vim.keymap.set("n", "H", "<Nop>", {
     noremap = true,
     silent = true,
-    desc = "Disable Shift-H"
+    desc = "Disable Shift-H",
 })
 
 -- Early filter for specific deprecation messages so they don't appear during
@@ -18,13 +18,9 @@ do
         if type(msg) == "string" then
             -- Filter messages that mention the deprecated API used by some plugins
             -- Example: "vim.lsp.get_active_clients() is deprecated. Run ':checkhealth vim.deprecated'..."
-            if msg:match "get_active_clients" or msg:match "checkhealth vim%.deprecated" then
-                return
-            end
+            if msg:match "get_active_clients" or msg:match "checkhealth vim%.deprecated" then return end
             -- Also ignore short deprecation mentions to avoid noisy startup messages
-            if msg:match "[Dd]eprecat" and (msg:match "vim%.lsp" or msg:match "get_active_clients") then
-                return
-            end
+            if msg:match "[Dd]eprecat" and (msg:match "vim%.lsp" or msg:match "get_active_clients") then return end
         end
         return _notify(msg, level, opts)
     end
@@ -61,32 +57,32 @@ vim.g.neovide_transparency = 0.65
 vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function()
         vim.api.nvim_set_hl(0, "NeoTreeNormal", {
-            bg = "NONE"
+            bg = "NONE",
         })
         vim.api.nvim_set_hl(0, "NeoTreeNormalNC", {
-            bg = "NONE"
+            bg = "NONE",
         })
         vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", {
-            bg = "NONE"
+            bg = "NONE",
         })
         vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", {
-            bg = "NONE"
+            bg = "NONE",
         })
-    end
+    end,
 })
 
 -- 立即应用透明设置
 vim.api.nvim_set_hl(0, "NeoTreeNormal", {
-    bg = "NONE"
+    bg = "NONE",
 })
 vim.api.nvim_set_hl(0, "NeoTreeNormalNC", {
-    bg = "NONE"
+    bg = "NONE",
 })
 vim.api.nvim_set_hl(0, "NeoTreeEndOfBuffer", {
-    bg = "NONE"
+    bg = "NONE",
 })
 vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", {
-    bg = "NONE"
+    bg = "NONE",
 })
 
 -- validate that lazy is available
@@ -103,7 +99,7 @@ require "polish"
 require "mapping"
 
 require("notify").setup {
-    background_colour = "#000000"
+    background_colour = "#000000",
 }
 
 -- F8 compile file
@@ -131,7 +127,7 @@ function CompileAndRunFile()
         run_cmd = string.format("./%s", output_file)
     elseif filetype == "cuda" then
         compile_cmd = -- string.format("nvcc -ccbin g++-14 -o %s %s -O2 -Wno-deprecated-gpu-targets ", output_file, filepath)
-        string.format("nvcc -ccbin g++ -o %s %s -O2 -Wno-deprecated-gpu-targets ", output_file, filepath)
+            string.format("nvcc -ccbin g++ -o %s %s -O2 -Wno-deprecated-gpu-targets ", output_file, filepath)
         run_cmd = string.format("./%s", output_file)
     elseif filetype == "c" then
         compile_cmd = string.format("clang -std=c2x -o %s %s -O2", output_file, filepath)
@@ -183,14 +179,14 @@ function CompileAndRunFile()
             row = row,
             col = col,
             border = "rounded",
-            noautocmd = true
+            noautocmd = true,
         }
         -- 保证浮动窗口边框和内容透明
         vim.api.nvim_set_hl(0, "NormalFloat", {
-            bg = "NONE"
+            bg = "NONE",
         })
         vim.api.nvim_set_hl(0, "FloatBorder", {
-            bg = "NONE"
+            bg = "NONE",
         })
 
         local win = vim.api.nvim_open_win(buf, true, opts)
@@ -235,34 +231,30 @@ function CompileAndRunFile()
         local ok, _ = pcall(function()
             -- create a prompt buffer and open a floating window matching the terminal size/pos
             local buf = vim.api.nvim_create_buf(false, true)
-            vim.api.nvim_buf_set_option(buf, 'buftype', 'prompt')
+            vim.api.nvim_buf_set_option(buf, "buftype", "prompt")
             vim.fn.prompt_setprompt(buf, "Optional run arguments: ")
             local win_opts = {
-                relative = 'editor',
+                relative = "editor",
                 row = input_row,
                 col = input_col,
                 width = input_w,
                 height = input_h,
-                style = 'minimal',
-                border = 'rounded',
+                style = "minimal",
+                border = "rounded",
             }
             local win = vim.api.nvim_open_win(buf, true, win_opts)
             vim.fn.prompt_setcallback(buf, function(input)
                 pcall(vim.api.nvim_win_close, win, true)
-                pcall(vim.api.nvim_buf_delete, buf, {force = true})
-                if input and input ~= "" then
-                    run_cmd = run_cmd .. " " .. input
-                end
+                pcall(vim.api.nvim_buf_delete, buf, { force = true })
+                if input and input ~= "" then run_cmd = run_cmd .. " " .. input end
                 open_floating_terminal(run_cmd)
             end)
-            vim.cmd('startinsert')
+            vim.cmd "startinsert"
         end)
         if not ok then
             -- fallback to simple input
-            local extra_args = vim.fn.input("Optional run arguments (append, leave empty for none): ")
-            if extra_args and extra_args ~= "" then
-                run_cmd = run_cmd .. " " .. extra_args
-            end
+            local extra_args = vim.fn.input "Optional run arguments (append, leave empty for none): "
+            if extra_args and extra_args ~= "" then run_cmd = run_cmd .. " " .. extra_args end
             open_floating_terminal(run_cmd)
         end
     else
@@ -272,10 +264,10 @@ end
 
 vim.api.nvim_set_keymap("n", "<F8>", ":lua CompileAndRunFile()<CR>", {
     noremap = true,
-    silent = true
+    silent = true,
 })
 
--- F6: compile file with debug info for c,cpp,rust 
+-- F6: compile file with debug info for c,cpp,rust
 function CompileAndRunWithDebug()
     local filepath = vim.fn.expand "%:p"
     local filename = vim.fn.expand "%:t:r"
@@ -311,19 +303,18 @@ function CompileAndRunWithDebug()
             vim.notify("Compilation successful", vim.log.levels.INFO)
         end
     end
-
 end
 
 vim.api.nvim_set_keymap("n", "<F6>", ":lua CompileAndRunWithDebug()<CR>", {
     noremap = true,
-    silent = true
+    silent = true,
 })
 
 -- debug configuration
 local dap = require "dap"
 
 local function mason_debugpy_python()
-    local mason_base = vim.fn.stdpath("data") .. "/mason/packages/debugpy"
+    local mason_base = vim.fn.stdpath "data" .. "/mason/packages/debugpy"
     local mason_venv = mason_base .. "/venv/bin/python"
     local mason_bin = mason_base .. "/bin/python"
     if vim.fn.executable(mason_venv) == 1 then
@@ -346,8 +337,8 @@ dap.adapters.python = function(cb, config)
             port = assert(port, "`connect.port` is required for a python `attach` configuration"),
             host = host,
             options = {
-                source_filetype = "python"
-            }
+                source_filetype = "python",
+            },
         }
     else
         local cmd = mason_debugpy_python()
@@ -359,44 +350,46 @@ dap.adapters.python = function(cb, config)
             elseif vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
                 cmd = cwd .. "/venv/bin/python"
             else
-                cmd = vim.fn.exepath("python3") or vim.fn.exepath("python") or "/usr/bin/python"
+                cmd = vim.fn.exepath "python3" or vim.fn.exepath "python" or "/usr/bin/python"
             end
         end
 
         cb {
             type = "executable",
             command = cmd,
-            args = {"-m", "debugpy.adapter"},
+            args = { "-m", "debugpy.adapter" },
             options = {
-                source_filetype = "python"
-            }
+                source_filetype = "python",
+            },
         }
     end
 end
 
-dap.configurations.python = {{
-    -- The first three options are required by nvim-dap
-    type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
-    request = "launch",
-    name = "Launch file",
+dap.configurations.python = {
+    {
+        -- The first three options are required by nvim-dap
+        type = "python", -- the type here established the link to the adapter definition: `dap.adapters.python`
+        request = "launch",
+        name = "Launch file",
 
-    -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
+        -- Options below are for debugpy, see https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for supported options
 
-    program = "${file}", -- This configuration will launch the current file if used.
-    pythonPath = function()
-        -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
-        -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
-        -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
-        local cwd = vim.fn.getcwd()
-        if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
-            return cwd .. "/venv/bin/python"
-        elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
-            return cwd .. "/.venv/bin/python"
-        else
-            return "/usr/bin/python"
-        end
-    end
-}}
+        program = "${file}", -- This configuration will launch the current file if used.
+        pythonPath = function()
+            -- debugpy supports launching an application with a different interpreter then the one used to launch debugpy itself.
+            -- The code below looks for a `venv` or `.venv` folder in the current directly and uses the python within.
+            -- You could adapt this - to for example use the `VIRTUAL_ENV` environment variable.
+            local cwd = vim.fn.getcwd()
+            if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
+                return cwd .. "/venv/bin/python"
+            elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
+                return cwd .. "/.venv/bin/python"
+            else
+                return "/usr/bin/python"
+            end
+        end,
+    },
+}
 
 -- debug for c cpp rust
 
@@ -444,32 +437,35 @@ dap.adapters.delve = {
     port = "${port}",
     executable = {
         command = "dlv",
-        args = {"dap", "-l", "127.0.0.1:${port}"}
+        args = { "dap", "-l", "127.0.0.1:${port}" },
         -- add this if on windows, otherwise server won't open successfully
         -- detached = false
-    }
+    },
 }
 
 -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
-dap.configurations.go = {{
-    type = "delve",
-    name = "Debug",
-    request = "launch",
-    program = "${file}"
-}, {
-    type = "delve",
-    name = "Debug test", -- configuration for debugging test files
-    request = "launch",
-    mode = "test",
-    program = "${file}"
-}, -- works with go.mod packages and sub packages
-{
-    type = "delve",
-    name = "Debug test (go.mod)",
-    request = "launch",
-    mode = "test",
-    program = "./${relativeFileDirname}"
-}}
+dap.configurations.go = {
+    {
+        type = "delve",
+        name = "Debug",
+        request = "launch",
+        program = "${file}",
+    },
+    {
+        type = "delve",
+        name = "Debug test", -- configuration for debugging test files
+        request = "launch",
+        mode = "test",
+        program = "${file}",
+    }, -- works with go.mod packages and sub packages
+    {
+        type = "delve",
+        name = "Debug test (go.mod)",
+        request = "launch",
+        mode = "test",
+        program = "./${relativeFileDirname}",
+    },
+}
 
 -- debug for js
 require("dap").adapters["pwa-node"] = {
@@ -478,22 +474,25 @@ require("dap").adapters["pwa-node"] = {
     port = "${port}",
     executable = {
         command = "js-debug-adapter",
-        args = {"${port}"}
-    }
+        args = { "${port}" },
+    },
 }
-dap.configurations.javascript = {{
-    type = "pwa-node",
-    request = "launch",
-    name = "Launch file",
-    program = "${file}",
-    cwd = "${workspaceFolder}"
-}, {
-    type = "pwa-node",
-    request = "attach",
-    name = "Attach",
-    processId = require("dap.utils").pick_process,
-    cwd = "${workspaceFolder}"
-}}
+dap.configurations.javascript = {
+    {
+        type = "pwa-node",
+        request = "launch",
+        name = "Launch file",
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+    },
+    {
+        type = "pwa-node",
+        request = "attach",
+        name = "Attach",
+        processId = require("dap.utils").pick_process,
+        cwd = "${workspaceFolder}",
+    },
+}
 
 -- -- detect codelldb adapter path (Mason or system)
 -- simple shell-style arg parser (handles single/double quotes and escapes)
@@ -504,7 +503,9 @@ local function parse_cmdline(s)
     local len = #s
     while i <= len do
         -- skip spaces
-        while i <= len and s:sub(i, i):match('%s') do i = i + 1 end
+        while i <= len and s:sub(i, i):match "%s" do
+            i = i + 1
+        end
         if i > len then break end
         local c = s:sub(i, i)
         local buf = {}
@@ -513,7 +514,7 @@ local function parse_cmdline(s)
             i = i + 1
             while i <= len do
                 local ch = s:sub(i, i)
-                if ch == '\\' then
+                if ch == "\\" then
                     -- escape next char
                     i = i + 1
                     if i <= len then table.insert(buf, s:sub(i, i)) end
@@ -528,8 +529,8 @@ local function parse_cmdline(s)
         else
             while i <= len do
                 local ch = s:sub(i, i)
-                if ch:match('%s') then break end
-                if ch == '\\' then
+                if ch:match "%s" then break end
+                if ch == "\\" then
                     i = i + 1
                     if i <= len then table.insert(buf, s:sub(i, i)) end
                 else
@@ -544,7 +545,7 @@ local function parse_cmdline(s)
 end
 
 local adapter_path = nil
-local mason_base = vim.fn.stdpath("data") .. "/mason/packages/codelldb"
+local mason_base = vim.fn.stdpath "data" .. "/mason/packages/codelldb"
 local candidate1 = mason_base .. "/extension/adapter/codelldb"
 local candidate2 = mason_base .. "/adapter/codelldb"
 if vim.loop.fs_stat(candidate1) then
@@ -553,10 +554,8 @@ elseif vim.loop.fs_stat(candidate2) then
     adapter_path = candidate2
 else
     -- try to find codelldb in PATH
-    local inpath = vim.fn.exepath("codelldb")
-    if inpath ~= "" then
-        adapter_path = inpath
-    end
+    local inpath = vim.fn.exepath "codelldb"
+    if inpath ~= "" then adapter_path = inpath end
 end
 
 if adapter_path and vim.loop.fs_stat(adapter_path) then
@@ -565,8 +564,8 @@ if adapter_path and vim.loop.fs_stat(adapter_path) then
         port = "${port}",
         executable = {
             command = adapter_path,
-            args = {"--port", "${port}"}
-        }
+            args = { "--port", "${port}" },
+        },
     }
 
     dap.configurations.cpp = dap.configurations.cpp or {}
@@ -574,26 +573,22 @@ if adapter_path and vim.loop.fs_stat(adapter_path) then
         name = "Launch codelldb",
         type = "codelldb",
         request = "launch",
-        program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-        end,
+        program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
         cwd = "${workspaceFolder}",
-        stopOnEntry = true
+        stopOnEntry = true,
     })
     -- Launch with args (quote-aware parsing)
     table.insert(dap.configurations.cpp, {
         name = "Launch codelldb (with args)",
         type = "codelldb",
         request = "launch",
-        program = function()
-            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
-        end,
+        program = function() return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file") end,
         args = function()
-            local input = vim.fn.input("Program args: ")
+            local input = vim.fn.input "Program args: "
             return parse_cmdline(input)
         end,
         cwd = "${workspaceFolder}",
-        stopOnEntry = true
+        stopOnEntry = true,
     })
     dap.configurations.c = dap.configurations.cpp
 
@@ -603,11 +598,14 @@ if adapter_path and vim.loop.fs_stat(adapter_path) then
         type = "codelldb",
         request = "launch",
         program = function()
-            return vim.fn.input("Path to executable (default target/debug/): ", vim.fn.getcwd() .. "/target/debug/",
-                "file")
+            return vim.fn.input(
+                "Path to executable (default target/debug/): ",
+                vim.fn.getcwd() .. "/target/debug/",
+                "file"
+            )
         end,
         cwd = "${workspaceFolder}",
-        stopOnEntry = true
+        stopOnEntry = true,
     })
     -- Rust: launch with args (quote-aware parsing)
     table.insert(dap.configurations.rust, {
@@ -615,20 +613,24 @@ if adapter_path and vim.loop.fs_stat(adapter_path) then
         type = "codelldb",
         request = "launch",
         program = function()
-            return vim.fn.input("Path to executable (default target/debug/): ", vim.fn.getcwd() .. "/target/debug/", "file")
+            return vim.fn.input(
+                "Path to executable (default target/debug/): ",
+                vim.fn.getcwd() .. "/target/debug/",
+                "file"
+            )
         end,
         args = function()
-            local input = vim.fn.input("Program args: ")
+            local input = vim.fn.input "Program args: "
             return parse_cmdline(input)
         end,
         cwd = "${workspaceFolder}",
-        stopOnEntry = true
+        stopOnEntry = true,
     })
 else
     -- adapter_path not found; do not register codelldb to avoid errors
-    vim.schedule(function()
-        vim.notify("codelldb adapter not found; skipping codelldb DAP registration", vim.log.levels.WARN)
-    end)
+    vim.schedule(
+        function() vim.notify("codelldb adapter not found; skipping codelldb DAP registration", vim.log.levels.WARN) end
+    )
 end
 
 -- clangd config
@@ -636,35 +638,48 @@ end
 local lspconfig = require "lspconfig"
 
 lspconfig.clangd.setup {
-    cmd = {"clangd", -- 确保这行存在
-    "--background-index", "--clang-tidy", "--completion-style=detailed", "--function-arg-placeholders",
-           "--header-insertion=iwyu", "--fallback-style=llvm"},
-    init_options = {
-        fallbackFlags = {"-std=c++23", -- "-std=c23",
-        "-Wall", "-Wextra", "-Wpedantic", "-Werror"}
+    cmd = {
+        "clangd", -- 确保这行存在
+        "--background-index",
+        "--clang-tidy",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
+        "--header-insertion=iwyu",
+        "--fallback-style=llvm",
     },
-    filetypes = {"cpp", "cxx", "cc", "h", "hpp", "hxx"},
-    root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".clangd", "CMakeLists.txt",
-        "Makefile", ".git"),
-    single_file_support = true
+    init_options = {
+        fallbackFlags = {
+            "-std=c++23", -- "-std=c23",
+            "-Wall",
+            "-Wextra",
+            "-Wpedantic",
+            "-Werror",
+        },
+    },
+    filetypes = { "cpp", "cxx", "cc", "h", "hpp", "hxx" },
+    root_dir = lspconfig.util.root_pattern(
+        "compile_commands.json",
+        "compile_flags.txt",
+        ".clangd",
+        "CMakeLists.txt",
+        "Makefile",
+        ".git"
+    ),
+    single_file_support = true,
 }
 
 local util = require "lspconfig.util"
 
 local function get_python_path(workspace)
-    if vim.env.VIRTUAL_ENV then
-        return vim.env.VIRTUAL_ENV .. "/bin/python"
-    end
+    if vim.env.VIRTUAL_ENV then return vim.env.VIRTUAL_ENV .. "/bin/python" end
 
-    local candidates = {".venv", "venv", "env"}
+    local candidates = { ".venv", "venv", "env" }
     for _, name in ipairs(candidates) do
         local full = util.path.join(workspace, name)
         local st = vim.loop.fs_stat(full)
         if st and st.type == "directory" then
             local py = util.path.join(full, "bin", "python")
-            if vim.loop.fs_stat(py) then
-                return py
-            end
+            if vim.loop.fs_stat(py) then return py end
         end
     end
 
@@ -686,10 +701,10 @@ local pyright_opts = {
                 autoSearchPaths = true,
                 diagnosticMode = "openFilesOnly",
                 typeCheckingMode = "basic",
-                useLibraryCodeForTypes = true
-            }
-        }
-    }
+                useLibraryCodeForTypes = true,
+            },
+        },
+    },
 }
 
 -- https://clangd.llvm.org/extensions.html#switch-between-sourceheader
@@ -697,13 +712,11 @@ local function switch_source_header(bufnr)
     bufnr = util.validate_bufnr(bufnr)
     local clangd_client = util.get_active_client_by_name(bufnr, "clangd")
     local params = {
-        uri = vim.uri_from_bufnr(bufnr)
+        uri = vim.uri_from_bufnr(bufnr),
     }
     if clangd_client then
         clangd_client.request("textDocument/switchSourceHeader", params, function(err, result)
-            if err then
-                error(tostring(err))
-            end
+            if err then error(tostring(err)) end
             if not result then
                 print "Corresponding file cannot be determined"
                 return
@@ -729,7 +742,7 @@ local function symbol_info()
         end
         local container = string.format("container: %s", res[1].containerName) ---@type string
         local name = string.format("name: %s", res[1].name) ---@type string
-        vim.lsp.util.open_floating_preview({name, container}, "", {
+        vim.lsp.util.open_floating_preview({ name, container }, "", {
             height = 2,
             width = math.max(string.len(name), string.len(container)),
             focusable = false,
@@ -738,47 +751,46 @@ local function symbol_info()
             title = "Symbol Info",
             -- stronger blend so the inner background becomes visually transparent
             winblend = 40,
-            winhighlight = "Normal:MacroFloatNormal,NormalFloat:MacroFloatNormal,FloatBorder:MacroFloatBorder,FloatTitle:MacroFloatTitle"
+            winhighlight = "Normal:MacroFloatNormal,NormalFloat:MacroFloatNormal,FloatBorder:MacroFloatBorder,FloatTitle:MacroFloatTitle",
         })
     end, bufnr)
 end
 
-local root_files = {".clangd", ".clang-tidy", ".clang-format", "compile_commands.json", "compile_flags.txt",
-                    "configure.ac" -- AutoTools
+local root_files = {
+    ".clangd",
+    ".clang-tidy",
+    ".clang-format",
+    "compile_commands.json",
+    "compile_flags.txt",
+    "configure.ac", -- AutoTools
 }
 
 local default_capabilities = {
     textDocument = {
         completion = {
-            editsNearCursor = true
-        }
+            editsNearCursor = true,
+        },
     },
-    offsetEncoding = {"utf-8", "utf-16"}
+    offsetEncoding = { "utf-8", "utf-16" },
 }
 
 return {
     default_config = {
-        cmd = {"clangd", "--compile_commands-dir=build", "xc++", "--std=c++23"},
-        filetypes = {"c", "cpp", "objc", "objcpp", "cuda", "proto"},
-        root_dir = function(fname)
-            return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname)
-        end,
+        cmd = { "clangd", "--compile_commands-dir=build", "xc++", "--std=c++23" },
+        filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+        root_dir = function(fname) return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname) end,
         single_file_support = true,
-        capabilities = default_capabilities
+        capabilities = default_capabilities,
     },
     commands = {
         ClangdSwitchSourceHeader = {
-            function()
-                switch_source_header(0)
-            end,
-            description = "Switch between source/header"
+            function() switch_source_header(0) end,
+            description = "Switch between source/header",
         },
         ClangdShowSymbolInfo = {
-            function()
-                symbol_info()
-            end,
-            description = "Show symbol info"
-        }
+            function() symbol_info() end,
+            description = "Show symbol info",
+        },
     },
     docs = {
         description = [[
@@ -805,7 +817,7 @@ https://clangd.llvm.org/installation.html
           '.git'
         )
       ]],
-            capabilities = [[default capabilities, with offsetEncoding utf-8]]
-        }
-    }
+            capabilities = [[default capabilities, with offsetEncoding utf-8]],
+        },
+    },
 }
