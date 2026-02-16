@@ -389,7 +389,24 @@ return {
             vim.g.sonokai_enable_italic = 1
             vim.g.sonokai_disable_italic_comment = 0
             vim.g.sonokai_transparent_background = 1 -- 启用透明背景
+                -- set default sonokai comment color to #67FFEF
+            vim.g.sonokai_comment_fg = "#67FFEF"
             vim.cmd "colorscheme sonokai"
+            -- sonokai: override comment color (可通过 vim.g.sonokai_comment_fg 自定义)
+            local function set_sonokai_comment()
+                local col = vim.g.sonokai_comment_fg or vim.g.user_comment_fg or "#67FFEF"
+                pcall(vim.api.nvim_set_hl, 0, "Comment", { fg = col, italic = true })
+                pcall(vim.api.nvim_set_hl, 0, "TSComment", { fg = col, italic = true })
+                pcall(vim.api.nvim_set_hl, 0, "@comment", { fg = col, italic = true })
+            end
+
+            set_sonokai_comment()
+            -- 延迟再次应用以防 colorscheme 后续覆盖
+            vim.defer_fn(set_sonokai_comment, 100)
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                pattern = "*",
+                callback = set_sonokai_comment,
+            })
         end,
     },
 
