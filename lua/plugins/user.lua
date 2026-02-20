@@ -164,6 +164,15 @@ return {
                 commented = false,
                 only_first_definition = true,
                 all_references = false,
+                -- show virtual text at end of line (eol)
+                virt_text_pos = "eol", -- 'eol' | 'inline' | 'overlay' | 'right_align'
+                virt_lines = false,
+                all_frames = false,
+                -- custom display: `name = value`
+                display_callback = function(variable, _buf, _stackframe, _node)
+                    local val = variable and variable.value or "nil"
+                    return string.format("%s = %s", variable.name or "", tostring(val))
+                end,
             }
         end,
     },
@@ -374,40 +383,54 @@ return {
     },
     {
         "neanias/everforest-nvim",
-        -- config = function()
-        --     vim.g.everforest_background = "hard" -- 选项: 'hard', 'medium', 'soft'
-        --     vim.g.everforest_better_performance = 1 -- 启用更好的性能
-        --     vim.g.everforest_disable_italic_comment = 0 -- 启用斜体注释
-        --     vim.g.everforest_transparent_background = 1 -- 启用透明背景
-        --     vim.cmd "colorscheme everforest"
-        -- end,
-    },
-    {
-        "sainnhe/sonokai",
         config = function()
-            vim.g.sonokai_style = "maia" -- or 'default','atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
-            vim.g.sonokai_enable_italic = 1
-            vim.g.sonokai_disable_italic_comment = 0
-            vim.g.sonokai_transparent_background = 1 -- 启用透明背景
-                -- set default sonokai comment color to #67FFEF
-            vim.g.sonokai_comment_fg = "#67FFEF"
-            vim.cmd "colorscheme sonokai"
-            -- sonokai: override comment color (可通过 vim.g.sonokai_comment_fg 自定义)
-            local function set_sonokai_comment()
+            vim.g.everforest_background = "soft" -- 选项: 'hard', 'medium', 'soft'
+            vim.g.everforest_better_performance = 1 -- 启用更好的性能
+            vim.g.everforest_disable_italic_comment = 0 -- 启用斜体注释
+            vim.g.everforest_transparent_background = 1 -- 启用透明背景
+            vim.cmd "colorscheme everforest"
+            local function set_everforest_comment()
                 local col = vim.g.sonokai_comment_fg or vim.g.user_comment_fg or "#67FFEF"
                 pcall(vim.api.nvim_set_hl, 0, "Comment", { fg = col, italic = true })
                 pcall(vim.api.nvim_set_hl, 0, "TSComment", { fg = col, italic = true })
                 pcall(vim.api.nvim_set_hl, 0, "@comment", { fg = col, italic = true })
             end
 
-            set_sonokai_comment()
+            set_everforest_comment()
             -- 延迟再次应用以防 colorscheme 后续覆盖
-            vim.defer_fn(set_sonokai_comment, 100)
+            vim.defer_fn(set_everforest_comment, 100)
             vim.api.nvim_create_autocmd("ColorScheme", {
                 pattern = "*",
-                callback = set_sonokai_comment,
+                callback = set_everforest_comment,
             })
         end,
+    },
+    {
+        "sainnhe/sonokai",
+        -- config = function()
+        --     vim.g.sonokai_style = "maia" -- or 'default','atlantis', 'andromeda', 'shusia', 'maia', 'espresso'
+        --     vim.g.sonokai_enable_italic = 1
+        --     vim.g.sonokai_disable_italic_comment = 0
+        --     vim.g.sonokai_transparent_background = 1 -- 启用透明背景
+        --         -- set default sonokai comment color to #67FFEF
+        --     vim.g.sonokai_comment_fg = "#67FFEF"
+        --     vim.cmd "colorscheme sonokai"
+        --     -- sonokai: override comment color (可通过 vim.g.sonokai_comment_fg 自定义)
+        --     local function set_sonokai_comment()
+        --         local col = vim.g.sonokai_comment_fg or vim.g.user_comment_fg or "#67FFEF"
+        --         pcall(vim.api.nvim_set_hl, 0, "Comment", { fg = col, italic = true })
+        --         pcall(vim.api.nvim_set_hl, 0, "TSComment", { fg = col, italic = true })
+        --         pcall(vim.api.nvim_set_hl, 0, "@comment", { fg = col, italic = true })
+        --     end
+        --
+        --     set_sonokai_comment()
+        --     -- 延迟再次应用以防 colorscheme 后续覆盖
+        --     vim.defer_fn(set_sonokai_comment, 100)
+        --     vim.api.nvim_create_autocmd("ColorScheme", {
+        --         pattern = "*",
+        --         callback = set_sonokai_comment,
+        --     })
+        -- end,
     },
 
     {

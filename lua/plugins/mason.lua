@@ -2,6 +2,20 @@
 
 ---@type LazySpec
 return {
+    {
+        "williamboman/mason.nvim",
+        opts = {
+            ui = {
+                border = "rounded",
+                winblend = 0,
+                icons = {
+                    package_installed = "✓",
+                    package_pending = "➜",
+                    package_uninstalled = "✗",
+                },
+            },
+        },
+    },
     -- use mason-lspconfig to configure LSP installations
     {
         "williamboman/mason-lspconfig.nvim",
