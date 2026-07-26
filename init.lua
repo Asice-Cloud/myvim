@@ -99,7 +99,7 @@ require "polish"
 require "mapping"
 
 require("notify").setup {
-    background_colour = "#000000",
+   background_colour = "#000000",
 }
 
 -- F8 compile file
@@ -123,7 +123,7 @@ function CompileAndRunFile()
 
     -- 根据文件类型选择编译器
     if filetype == "cpp" then
-        compile_cmd = string.format("clang++ -std=c++23 -o %s %s -O2", output_file, filepath)
+        compile_cmd = string.format("clang++ -std=c++26 -o %s %s -O2", output_file, filepath)
         run_cmd = string.format("./%s", output_file)
     elseif filetype == "cuda" then
         compile_cmd = -- string.format("nvcc -ccbin g++-14 -o %s %s -O2 -Wno-deprecated-gpu-targets ", output_file, filepath)
@@ -279,7 +279,7 @@ function CompileAndRunWithDebug()
     local compile_cmd = ""
 
     if filetype == "cpp" then
-        compile_cmd = string.format("clang++ -g -std=c++23 -O0 -o %s %s", output_file, filepath)
+        compile_cmd = string.format("clang++ -g -std=c++26 -O0 -o %s %s", output_file, filepath)
     elseif filetype == "c" then
         compile_cmd = string.format("clang -g -std=c2x -O0 -o %s %s", output_file, filepath)
     elseif filetype == "rust" then
@@ -649,7 +649,7 @@ lspconfig.clangd.setup {
     },
     init_options = {
         fallbackFlags = {
-            "-std=c++23", -- "-std=c23",
+            "-std=c++26", -- "-std=c23",
             "-Wall",
             "-Wextra",
             "-Wpedantic",
@@ -776,7 +776,7 @@ local default_capabilities = {
 
 return {
     default_config = {
-        cmd = { "clangd", "--compile_commands-dir=build", "xc++", "--std=c++23" },
+        cmd = { "clangd", "--compile_commands-dir=build", "xc++", "--std=c++26" },
         filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
         root_dir = function(fname) return util.root_pattern(unpack(root_files))(fname) or util.find_git_ancestor(fname) end,
         single_file_support = true,

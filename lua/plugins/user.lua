@@ -5,6 +5,11 @@ return {
     plugins = {
         init = {},
     },
+    -- Temporarily disable plugins that may trigger LSP attach errors
+    { "stevearc/aerial.nvim", enabled = false },
+    { "nvimtools/none-ls.nvim", enabled = false },
+    -- Disable mason-null-ls to avoid errors when `null-ls` isn't installed
+    { "jay-babu/mason-null-ls.nvim", enabled = false },
     -- Neo-tree 配置：显示隐藏文件
     {
         "nvim-neo-tree/neo-tree.nvim",
@@ -443,17 +448,17 @@ return {
         --   vim.cmd "colorscheme gruvbox"
         -- end,
     },
-    {
-        "github/copilot.vim",
-        config = function()
-            vim.g.copilot_no_tab_map = true
-            vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', {
-                expr = true,
-                silent = true,
-                noremap = true,
-            })
-        end,
-    },
+    -- {
+    --     "github/copilot.vim",
+    --     config = function()
+    --         vim.g.copilot_no_tab_map = true
+    --         vim.api.nvim_set_keymap("i", "<C-l>", 'copilot#Accept("<CR>")', {
+    --             expr = true,
+    --             silent = true,
+    --             noremap = true,
+    --         })
+    --     end,
+    -- },
     {
         "vim-airline/vim-airline",
         config = function()

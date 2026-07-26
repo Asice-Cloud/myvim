@@ -1,0 +1,153 @@
+
+ ~
+- ⚠️ WARNING client.is_stopped is deprecated. Feature will be removed in Nvim 0.13
+  - ADVICE:
+    - use client:is_stopped instead.
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/cmp-nvim-lsp/lua/cmp_nvim_lsp/source.lua:20
+        /home/asice-cloud/.local/share/nvim/lazy/cmp-nvim-lsp/lua/cmp_nvim_lsp/init.lua:112
+
+ ~
+- ⚠️ WARNING client.request is deprecated. Feature will be removed in Nvim 0.13
+  - ADVICE:
+    - use client:request instead.
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-ufo/lua/ufo/provider/lsp/nvim.lua:35
+        =[C]:-1
+        /home/asice-cloud/.local/share/nvim/lazy/promise-async/lua/promise.lua:186
+        /home/asice-cloud/.local/share/nvim/lazy/promise-async/lua/promise.lua:253
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-ufo/lua/ufo/provider/lsp/nvim.lua:81
+
+ ~
+- ⚠️ WARNING client.supports_method is deprecated. Feature will be removed in Nvim 0.13
+  - ADVICE:
+    - use client:supports_method instead.
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:260
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1152
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:260
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1152
+        /usr/share/nvim/runtime/lua/vim/lsp.lua:1047
+        =[C]:-1
+        luaeval():1
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:82
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:88
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:100
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/AstroNvim/lua/astronvim/plugins/_astrolsp_autocmds.lua:3
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:112
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:126
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/AstroNvim/lua/astronvim/plugins/_astrolsp_autocmds.lua:3
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:126
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:157
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/AstroNvim/lua/astronvim/plugins/_astrolsp_mappings.lua:44
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:157
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/AstroNvim/lua/astronvim/plugins/_astrolsp_mappings.lua:121
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:157
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:200
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:255
+        /home/asice-cloud/.local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs.lua:211
+        =[C]:-1
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:515
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:1158
+        /usr/share/nvim/runtime/lua/vim/lsp/client.lua:613
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/vim-illuminate/lua/illuminate/providers/lsp.lua:55
+        /home/asice-cloud/.local/share/nvim/lazy/vim-illuminate/lua/illuminate/engine.lua:221
+        /home/asice-cloud/.local/share/nvim/lazy/vim-illuminate/lua/illuminate/engine.lua:149
+        /home/asice-cloud/.local/share/nvim/lazy/vim-illuminate/lua/illuminate/engine.lua:50
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/vim-illuminate/lua/illuminate/providers/lsp.lua:55
+        /home/asice-cloud/.local/share/nvim/lazy/vim-illuminate/lua/illuminate/engine.lua:221
+        /home/asice-cloud/.local/share/nvim/lazy/vim-illuminate/lua/illuminate/engine.lua:179
+        =[C]:-1
+        /home/asice-cloud/.local/share/nvim/lazy/vim-illuminate/lua/illuminate/engine.lua:158
+        vim/_core/editor.lua:0
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:136
+        =[C]:-1
+        /home/asice-cloud/.local/share/nvim/lazy/nui.nvim/lua/nui/popup/init.lua:297
+        /home/asice-cloud/.local/share/nvim/lazy/nui.nvim/lua/nui/popup/init.lua:321
+        /home/asice-cloud/.local/share/nvim/lazy/nui.nvim/lua/nui/input/init.lua:137
+        /home/asice-cloud/.local/share/nvim/lazy/nui.nvim/lua/nui/input/init.lua:111
+    - stack traceback:
+        /home/asice-cloud/.local/share/nvim/lazy/astrolsp/lua/astrolsp/init.lua:136
+
