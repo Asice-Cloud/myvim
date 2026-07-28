@@ -10,6 +10,8 @@ return {
     { "nvimtools/none-ls.nvim", enabled = false },
     -- Disable mason-null-ls to avoid errors when `null-ls` isn't installed
     { "jay-babu/mason-null-ls.nvim", enabled = false },
+    -- treesitter 禁用了，Comment.nvim 无法工作，关掉
+    { "numToStr/Comment.nvim", enabled = false },
     -- Neo-tree 配置：显示隐藏文件
     {
         "nvim-neo-tree/neo-tree.nvim",
